@@ -1,5 +1,5 @@
 videopoker : main.o game.o dealer.o pokerplayer.o player.o hand.o deck.o card.o
-	g++ -o videopoker -Wall -Wextra -std=c++11 -pedantic -lsfml-graphics -lsfml-window -lsfml-system main.o game. dealer.o pokerplayer.o player.o hand.o deck.o card.o
+	g++ -o videopoker -Wall -Wextra -std=c++11 -pedantic -lsfml-graphics -lsfml-window -lsfml-system main.o game.o dealer.o pokerplayer.o player.o hand.o deck.o card.o
 card.o : card.cpp
 	g++ -Wall -Wextra -std=c++11 -pedantic -c card.cpp
 deck.o : deck.cpp

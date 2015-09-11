@@ -12,19 +12,27 @@
 #define GAME_H
 
 #include "SFML/Graphics.hpp" //needed for gui
+#include "card.hpp"
+#include "deck.hpp"
+#include "hand.hpp"
+#include "player.hpp"
+#include "pokerplayer.hpp"
+#include "dealer.hpp"
+
 
 
 class Game
 {
 	private:
-		int nameCharCount;
+		PokerPlayer* player = nullptr;
+		int  nameCharCount;
 		bool gameMenuNeeded;
 		bool textEntered;
 		bool textBoxNeeded;
-		sf::RenderWindow* window;
+		sf::RenderWindow* window = nullptr;
 		sf::Event event;
 		bool mousePressed;
-		sf::Vector2i* mousePos;
+		sf::Vector2i* mousePos = nullptr;
 		sf::Texture texture;
 		sf::Sprite cardSprites[5]; 
 		sf::Sprite newGameSprite;
