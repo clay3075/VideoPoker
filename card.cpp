@@ -13,6 +13,7 @@ Card::Card(string fce, string s, int val)
 	face = fce;
 	suit = s;
 	value = val;
+	selected = false;
 }
 
 //returns the string face value of the card
@@ -38,3 +39,16 @@ void Card::changeValue(int val)
 {
 	value = val;
 }
+
+//will mark this card as selected unless already selected it will then be deselected
+void   Card::select()
+{
+	selected = !selected; //reverse truth value
+}
+
+//will return whether card is selected or not true for yes false for no
+bool   Card::isSelected()
+{
+	return selected;
+}
+

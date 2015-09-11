@@ -18,15 +18,16 @@
 class PokerPlayer : public Player, public Hand
 {
 	protected:
-		int moneyBet;
+		int  moneyBet;
+		bool betPlaced;
 	public:
 		PokerPlayer(int score = 200);
 		void placeBet(const int betAmount = 0); //will be used to place a bet
 		void calcScore(bool wonOrLost); //will be used to keep score in a valid state as influences are made on it
 		int  getBet() //returns the current total the bet is at
 			{return moneyBet;}
-		void clearBet() //will null the moneyBet variable
-			{moneyBet = 0;}
+		void clearBet(); //will null the moneyBet variable and change betPlaced to false
+		bool isBetPlaced(); //will return true if player has put in a bet false otherwise
 		void show(sf::Sprite& sprite, sf::RenderWindow* window, sf::Texture& texture, PokerPlayer* player); //shows hand to screen
 };
 

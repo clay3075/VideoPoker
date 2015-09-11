@@ -14,6 +14,7 @@ private:
 	string face;  //holds the string equivelent of the face value
 	string suit;  //holds the suit of the card
 	int    value; //holds the actual value of the card for mathmatical purposes
+	bool   selected; //holds true if player has selected this card
 public:
 	Card() //default constructor makes a blank card //definded inline
 		{face = "";
@@ -24,6 +25,8 @@ public:
 	string getSuit();  //returns the suit of the card as a string
 	int    getValue(); //returns the actual value of the card as an int
 	void   changeValue(int val = 0); //changes value of card
+	void   select();  //will mark this card as selected unless already selected it will then be deselected
+	bool   isSelected(); //will return whether card is selected or not true for yes false for no
 };
 
 #endif

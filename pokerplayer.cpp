@@ -6,6 +6,18 @@
 
 #include "pokerplayer.hpp"
 
+//will null the moneyBet variable and change betPlaced to false
+void PokerPlayer::clearBet()
+{
+	moneyBet = 0;
+	betPlaced = false;
+}
+
+//will return true if player has put in a bet false otherwise
+bool PokerPlayer::isBetPlaced()
+{
+	return betPlaced;
+}
 //will be used to keep score in a valid state as influences are made on it
 void PokerPlayer::calcScore(bool wonOrLost)
 {
@@ -23,6 +35,7 @@ void PokerPlayer::calcScore(bool wonOrLost)
 
 PokerPlayer::PokerPlayer(int score) : Player(), Hand()
 {
+	betPlaced = false;
 	if (score > 0)
 	{
 		this->score = score;
@@ -39,6 +52,7 @@ void PokerPlayer::placeBet(const int betAmount)
 	if (betAmount >= 0)
 	{
 		moneyBet += betAmount;
+		betPlaced = true;
 	}
 	return;
 }
