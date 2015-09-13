@@ -12,6 +12,9 @@
 #include <fstream>
  	using std::ofstream;
  	using std::ifstream;
+#include <string>
+ 	using std::string;
+#include <iostream>
 
 //used to handle all events that occur in the game
 void Game::processEvents()
@@ -77,14 +80,15 @@ void Game::update()
 			}	
 			if (static_cast<char>(event.text.unicode) == '\b')
 			{
-				//
-				//work on making backspace work
-				//temp fix
-				player->setName("");
-				nameCharCount = 0;
-				//text.setPosition(sf::Vector2f(800, 445.0f));
-				//
-				//
+				
+				string temp = player->getName();
+				temp = temp.substr(0, temp.size() - 2);
+				player->setName(temp);
+				if (nameCharCount > 1)
+				{
+					nameCharCount -= 2;
+					text.setPosition(sf::Vector2f(800 + (nameCharCount * 10), 445.0f));
+				}
 			}
 		}
 		else
@@ -184,13 +188,15 @@ void Game::renderTextBox()
 	//
 	
 	//draw text to screen
+	text.setString("What's your name?\n");
+	text.setPosition(sf::Vector2f(450.0f, 250.0f));
+	text.setCharacterSize(80);
+	text.setColor(sf::Color::White);
+	window->draw(text);
 	text.setColor(sf::Color::Black);
 	text.setCharacterSize(40);
 	text.setString(player->getName());
-	if (nameCharCount == 0)
-		text.setPosition(sf::Vector2f(/*365.0f*/450, 445.0f));
-	else
-		text.setPosition(sf::Vector2f(/*365.0f*/800 - (nameCharCount * 10), 445.0f));
+	text.setPosition(sf::Vector2f(800 - (nameCharCount * 10), 445.0f));
 	window->draw(text);
 	//
 }
