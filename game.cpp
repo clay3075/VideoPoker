@@ -70,7 +70,7 @@ void Game::update()
 	{
 		//if text is a printable character
 		if (event.text.unicode < 128 && nameCharCount < 16)
-		{
+		{	
 			player->setName(player->getName() + static_cast<char>(event.text.unicode)); //add text to players name
 			textEntered = false;
 			nameCharCount += 1;
@@ -80,13 +80,13 @@ void Game::update()
 			}	
 			if (static_cast<char>(event.text.unicode) == '\b')
 			{
-				
-				string temp = player->getName();
-				temp = temp.substr(0, temp.size() - 2);
-				player->setName(temp);
 				if (nameCharCount > 1)
 				{
+					string temp = player->getName();
+					temp = temp.substr(0, temp.size() - 2);
+					player->setName(temp);
 					nameCharCount -= 2;
+					std::cout << nameCharCount;
 					text.setPosition(sf::Vector2f(800 + (nameCharCount * 10), 445.0f));
 				}
 			}
