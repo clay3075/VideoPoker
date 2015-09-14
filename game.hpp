@@ -35,6 +35,9 @@ class Game
 		sf::Vector2i* mousePos = nullptr;
 		sf::Texture texture;
 		sf::Sprite cardSprites[5]; 
+		sf::Sprite dealSprite;
+		sf::Sprite bet1Sprite;
+		sf::Sprite bet5Sprite;
 		sf::Sprite newGameSprite;
 		sf::Sprite resumeSprite;
 		sf::Font font;
@@ -44,6 +47,7 @@ class Game
 		void render(); 		  //shows changes to game on screen
 		void initializePlayer(); //will read data from "savedinfo.txt" if it exist into player on game
 		void drawMenu();         //draw game menu when it is opened
+		void drawButtons();
 		void renderTextBox();    //draw text box to screen and any characters typed in
 		void saveGame();		 //will save game information to a file called "savedinfo.txt"
 		bool savedGameExists();  //will return true if there is a "savedinfo.txt" file false otherwise

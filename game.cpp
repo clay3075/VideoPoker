@@ -49,7 +49,7 @@ void Game::update()
 	if (mousePressed)
 	{
 		//if player presses new game button from start menu
-		if (newGameSprite.getGlobalBounds().contains(static_cast<sf::Vector2f>(*mousePos)))
+		if (newGameSprite.getGlobalBounds().contains(static_cast<sf::Vector2f>(*mousePos)) && gameMenuNeeded)
 		{
 			gameMenuNeeded = false;
 			textBoxNeeded = true;
@@ -63,6 +63,24 @@ void Game::update()
 			{
 				initializePlayer();
 			}
+		}
+
+		//if player presses bet1 button 
+		if (bet1Sprite.getGlobalBounds().contains(static_cast<sf::Vector2f>(*mousePos)))
+		{
+			
+		}
+
+		//if player presses bet5 button 
+		if (bet5Sprite.getGlobalBounds().contains(static_cast<sf::Vector2f>(*mousePos)))
+		{
+			
+		}
+
+		//if player presses deal button 
+		if (dealSprite.getGlobalBounds().contains(static_cast<sf::Vector2f>(*mousePos)))
+		{
+			
 		}
 	}
 	//if player enters text
@@ -117,6 +135,7 @@ void Game::render()
 	{
 		text.setCharacterSize(40);
 		text.setColor(sf::Color::Black);
+		drawButtons();
 	}
 
 	//show window to screen
@@ -198,6 +217,45 @@ void Game::renderTextBox()
 	text.setString(player->getName());
 	text.setPosition(sf::Vector2f(800 - (nameCharCount * 10), 445.0f));
 	window->draw(text);
+	//
+}
+
+void Game::drawButtons()
+{
+	//draw bet1 button
+	if (!texture.loadFromFile("images/bet1.png")) //load image
+	{
+		throw "bet1 error."; 
+	}
+	bet1Sprite.setTexture(texture); //create button sprite
+	bet1Sprite.setScale(sf::Vector2f(1.0f, 1.0f));            //set size
+	bet1Sprite.setPosition(sf::Vector2f(350.0f, 900.0f));   //set postion
+	window->draw(bet1Sprite);
+	//
+	//
+
+	//draw bet5 button
+	if (!texture.loadFromFile("images/bet5.png")) //load image
+	{
+		throw "bet5 error."; 
+	}
+	bet5Sprite.setTexture(texture); //create button sprite
+	bet5Sprite.setScale(sf::Vector2f(1.0f, 1.0f));            //set size
+	bet5Sprite.setPosition(sf::Vector2f(850.0f, 900.0f));   //set postion
+	window->draw(bet5Sprite);
+	//
+	//
+
+	//draw deal button
+	if (!texture.loadFromFile("images/deal.png")) //load image
+	{
+		throw "bet5 error."; 
+	}
+	dealSprite.setTexture(texture); //create button sprite
+	dealSprite.setScale(sf::Vector2f(1.0f, 1.0f));            //set size
+	dealSprite.setPosition(sf::Vector2f(1200.0f, 900.0f));   //set postion
+	window->draw(dealSprite);
+	//
 	//
 }
 
