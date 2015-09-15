@@ -136,6 +136,8 @@ void Game::render()
 		text.setCharacterSize(40);
 		text.setColor(sf::Color::Black);
 		drawButtons();
+		drawScore();
+		drawCards();
 	}
 
 	//show window to screen
@@ -229,7 +231,7 @@ void Game::drawButtons()
 	}
 	bet1Sprite.setTexture(texture); //create button sprite
 	bet1Sprite.setScale(sf::Vector2f(1.0f, 1.0f));            //set size
-	bet1Sprite.setPosition(sf::Vector2f(350.0f, 900.0f));   //set postion
+	bet1Sprite.setPosition(sf::Vector2f(400.0f, 900.0f));   //set postion
 	window->draw(bet1Sprite);
 	//
 	//
@@ -241,7 +243,7 @@ void Game::drawButtons()
 	}
 	bet5Sprite.setTexture(texture); //create button sprite
 	bet5Sprite.setScale(sf::Vector2f(1.0f, 1.0f));            //set size
-	bet5Sprite.setPosition(sf::Vector2f(850.0f, 900.0f));   //set postion
+	bet5Sprite.setPosition(sf::Vector2f(900.0f, 900.0f));   //set postion
 	window->draw(bet5Sprite);
 	//
 	//
@@ -253,10 +255,27 @@ void Game::drawButtons()
 	}
 	dealSprite.setTexture(texture); //create button sprite
 	dealSprite.setScale(sf::Vector2f(1.0f, 1.0f));            //set size
-	dealSprite.setPosition(sf::Vector2f(1200.0f, 900.0f));   //set postion
+	dealSprite.setPosition(sf::Vector2f(1250.0f, 900.0f));   //set postion
 	window->draw(dealSprite);
 	//
 	//
+}
+
+//draw players credits
+void Game::drawScore()
+{
+	//draw text to screen
+	text.setString("Score: " + std::to_string(player->getScore()));
+	text.setPosition(sf::Vector2f(10.0f, 900.0f));
+	text.setCharacterSize(70);
+	text.setColor(sf::Color::Yellow);
+	window->draw(text);
+}
+
+//draw cards to screen
+void Game::drawCards()
+{
+	player->show(cardSprites, window, texture, player);
 }
 
 //will save game information to a file called "savedinfo.txt"
@@ -278,10 +297,25 @@ bool Game::savedGameExists()
 	return exists;
 }
 
+
+void Game::restartHand()
+{
+	player->clear();
+	dealer->shuffle();
+	for (int i = 0; i < 5; i++)
+	{
+		player->drawCard(dealer->deal()); //give player 5 new cards
+	}
+}
+
 //default constructor //sets up game graphics
 Game::Game()
 {
 	player = new PokerPlayer;
+	dealer = new Dealer;
+
+	restartHand();
+
 	//create window for game to played in
 	window = new sf::RenderWindow(sf::VideoMode(1600, 1000), "Jacks or Better");
 

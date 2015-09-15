@@ -24,7 +24,7 @@ public:
 	void clear();             //removes all cards from hand
 	void show(){}; 			  //function shows card to screen
 	int getWorth();	   	 	  //returns the worth of the cards in hand
-	unsigned int getNumberOfCardsInDeck() //returns how many cards are in hand
+	unsigned int getNumberOfCardsInHand() //returns how many cards are in hand
 		{return cards.size();}
 	void changeAceValue();     //if ace is in hand changes ace value
 

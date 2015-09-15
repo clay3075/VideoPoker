@@ -10,10 +10,19 @@
  #ifndef DEALER_H
  #define DEALER_H
 
-class Dealer
+ #include "pokerplayer.hpp"
+ #include "deck.hpp"
+ #include <string>
+ 	using std::string;
+
+class Dealer: public PokerPlayer
 {
 	private:
+		Deck deck; 
 	public:	
+		Dealer(); //constructor will initialize all values needed
+		void shuffle(); //will randomize cards in deck by calling the Deck class shuffle() function
+		Card deal();   //will return a Card object from the "top" of the deck object
 };
 
  #endif
