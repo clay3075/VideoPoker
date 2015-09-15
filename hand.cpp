@@ -58,6 +58,13 @@ void Hand::clear()
 {
 	cards.clear();
 	calcWorth();
+	for (unsigned int i = 0; i < cards.size(); i++)
+	{
+		if (cards.at(i).isSelected() == true)
+		{
+			cards.at(i).select();
+		}
+	}
 	return;
 }
 
@@ -82,5 +89,22 @@ void Hand::changeAceValue()
 		}
 	}
 	calcWorth();
+}
+
+//select card
+void Hand::selectCard(int i)
+{
+	cards.at(i).select();
+}
+
+bool Hand::cardSelected(int i)
+{
+	return cards.at(i).isSelected();
+}
+
+//replace chosen cards
+void Hand::replaceCard(int i, Card card)
+{
+	cards.at(i) = card;
 }
 

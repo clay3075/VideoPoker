@@ -27,3 +27,4 @@ Card Dealer::deal()
 {
 	return deck.deal();
 }  
+

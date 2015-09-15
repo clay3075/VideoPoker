@@ -27,7 +27,9 @@ public:
 	unsigned int getNumberOfCardsInHand() //returns how many cards are in hand
 		{return cards.size();}
 	void changeAceValue();     //if ace is in hand changes ace value
-
+	void selectCard(int i);
+	bool cardSelected(int i);
+	void replaceCard(int i, Card card);
 };
 
 #endif

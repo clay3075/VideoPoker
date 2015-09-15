@@ -80,7 +80,37 @@ void Game::update()
 		//if player presses deal button 
 		if (dealSprite.getGlobalBounds().contains(static_cast<sf::Vector2f>(*mousePos)))
 		{
-			
+			secondDeal();
+		}
+
+		//player presses card 1
+		if (cardSprites[CARD1].getGlobalBounds().contains(static_cast<sf::Vector2f>(*mousePos)))
+		{
+			player->selectCard(CARD1);
+		}
+
+		//player presses card 2
+		if (cardSprites[CARD2].getGlobalBounds().contains(static_cast<sf::Vector2f>(*mousePos)))
+		{
+			player->selectCard(CARD2);
+		}
+
+		//player presses card 3
+		if (cardSprites[CARD3].getGlobalBounds().contains(static_cast<sf::Vector2f>(*mousePos)))
+		{
+			player->selectCard(CARD3);
+		}
+
+		//player presses card 4
+		if (cardSprites[CARD4].getGlobalBounds().contains(static_cast<sf::Vector2f>(*mousePos)))
+		{
+			player->selectCard(CARD4);
+		}
+
+		//player presses card 5
+		if (cardSprites[CARD5].getGlobalBounds().contains(static_cast<sf::Vector2f>(*mousePos)))
+		{
+			player->selectCard(CARD5);
 		}
 	}
 	//if player enters text
@@ -138,6 +168,7 @@ void Game::render()
 		drawButtons();
 		drawScore();
 		drawCards();
+		drawHold();
 	}
 
 	//show window to screen
@@ -278,6 +309,21 @@ void Game::drawCards()
 	player->show(cardSprites, window, texture, player);
 }
 
+//if player selects card let them know
+void Game::drawHold()
+{
+	for (int i = 0; i < 5; i++)
+	{
+		if (player->cardSelected(i))
+		{
+			text.setString("Hold");
+			text.setColor(sf::Color::Yellow);
+			text.setCharacterSize(60);
+			text.setPosition(sf::Vector2f(75.0f * (3.5 * i+2.6), 520.0f));
+			window->draw(text);
+		}
+	}
+}
 //will save game information to a file called "savedinfo.txt"
 void Game::saveGame()
 {
@@ -297,6 +343,17 @@ bool Game::savedGameExists()
 	return exists;
 }
 
+//deal new cards for cards that are held
+void Game::secondDeal()
+{
+	for (int i = 0; i < 5; i++)
+	{
+		if (player->cardSelected(i) == false)
+		{
+			player->replaceCard(i,dealer->deal());
+		}
+	}
+}
 
 void Game::restartHand()
 {

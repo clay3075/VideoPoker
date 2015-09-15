@@ -24,6 +24,11 @@
 class Game
 {
 	private:
+		static const int CARD1 = 0;
+		static const int CARD2 = 1;
+		static const int CARD3 = 2;
+		static const int CARD4 = 3;
+		static const int CARD5 = 4;
 		PokerPlayer* player = nullptr;
 		Dealer* 	 dealer = nullptr;
 		int  nameCharCount;
@@ -51,7 +56,9 @@ class Game
 		void drawButtons();		 //draw bet1, bet5, deal buttons
 		void drawScore();		 //draw players credits
 		void drawCards();
+		void drawHold();   
 		void restartHand();
+		void secondDeal();
 		void renderTextBox();    //draw text box to screen and any characters typed in
 		void saveGame();		 //will save game information to a file called "savedinfo.txt"
 		bool savedGameExists();  //will return true if there is a "savedinfo.txt" file false otherwise

@@ -57,6 +57,7 @@ void PokerPlayer::placeBet(const int betAmount)
 	return;
 }
 
+
 //shows hand to screen
 void PokerPlayer::show(sf::Sprite* sprite, sf::RenderWindow* window, sf::Texture& texture, PokerPlayer* player)
 {
