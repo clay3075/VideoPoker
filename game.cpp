@@ -420,5 +420,7 @@ Game::~Game()
 	mousePos = nullptr;
 	delete player;
 	player = nullptr;
+	delete dealer;
+	dealer = nullptr;
 }
 
