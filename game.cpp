@@ -15,6 +15,7 @@
 #include <string>
  	using std::string;
 #include <iostream>
+#include <ctime>
 
 //used to handle all events that occur in the game
 void Game::processEvents()
@@ -307,6 +308,7 @@ void Game::drawScore()
 void Game::drawCards()
 {
 	player->show(cardSprites, window, texture, player);
+	dealer->show(tempCardSprite, window, texture, dealer);
 }
 
 //if player selects card let them know
@@ -358,16 +360,20 @@ void Game::secondDeal()
 void Game::restartHand()
 {
 	player->clear();
+	dealer->clear();
 	dealer->shuffle();
 	for (int i = 0; i < 5; i++)
 	{
 		player->drawCard(dealer->deal()); //give player 5 new cards
+		dealer->drawCard(dealer->deal()); //give dealer 5 new cards
 	}
 }
 
 //default constructor //sets up game graphics
 Game::Game()
 {
+	srand(time(0));
+	rand();
 	player = new PokerPlayer;
 	dealer = new Dealer;
 

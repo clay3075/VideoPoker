@@ -41,6 +41,7 @@ class Game
 		sf::Vector2i* mousePos = nullptr;
 		sf::Texture texture;
 		sf::Sprite cardSprites[5]; 
+		sf::Sprite tempCardSprite;
 		sf::Sprite dealSprite;
 		sf::Sprite bet1Sprite;
 		sf::Sprite bet5Sprite;

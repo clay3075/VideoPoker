@@ -15,4 +15,4 @@ dealer.o : dealer.cpp
 game.o : game.cpp
 	g++ -Wall -Wextra -std=c++11 -pedantic -c game.cpp
 main.o : main.cpp
-	g++ -Wall -Wextra -std=c++11 -pedantic -c main.cpp
+	g++ -Wall -Wextra -std=c++11 -pedantic -c main.cpp                                                                

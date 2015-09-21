@@ -23,6 +23,7 @@ class Dealer: public PokerPlayer
 		Dealer(); //constructor will initialize all values needed
 		void shuffle(); //will randomize cards in deck by calling the Deck class shuffle() function
 		Card deal();   //will return a Card object from the "top" of the deck object
+		void show(sf::Sprite sprite, sf::RenderWindow* window, sf::Texture& texture, Dealer* player);
 };
 
  #endif
