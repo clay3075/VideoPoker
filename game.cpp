@@ -302,6 +302,8 @@ void Game::drawScore()
 	text.setCharacterSize(70);
 	text.setColor(sf::Color::Yellow);
 	window->draw(text);
+	text.setPosition(sf::Vector2f(1200.0f,10.0f));
+	window->draw(text);
 }
 
 //draw cards to screen
