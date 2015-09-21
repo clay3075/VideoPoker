@@ -81,7 +81,10 @@ void Game::update()
 		//if player presses deal button 
 		if (dealSprite.getGlobalBounds().contains(static_cast<sf::Vector2f>(*mousePos)))
 		{
-			secondDeal();
+			if (secondDealAllowed)
+				secondDeal();
+			else
+				restartHand();
 		}
 
 		//player presses card 1
@@ -170,6 +173,7 @@ void Game::render()
 		drawScore();
 		drawCards();
 		drawHold();
+		drawNewHandInstructions();
 	}
 
 	//show window to screen
@@ -306,11 +310,25 @@ void Game::drawScore()
 	window->draw(text);
 }
 
+//if round is over inform user what to do
+//will tell user to press deal for next hand.
+void Game::drawNewHandInstructions()
+{
+	if (!secondDealAllowed)
+	{
+		text.setString("Press deal for new hand.");
+		text.setColor(sf::Color::Red);
+		text.setCharacterSize(60);
+		text.setPosition(sf::Vector2f(450.0f,450.0f));
+		window->draw(text);
+	}
+}
+
 //draw cards to screen
 void Game::drawCards()
 {
 	player->show(cardSprites, window, texture, player);
-	dealer->show(tempCardSprite, window, texture, dealer);
+	dealer->show(dealerCardSprite, window, texture, dealer, !secondDealAllowed);
 }
 
 //if player selects card let them know
@@ -350,6 +368,7 @@ bool Game::savedGameExists()
 //deal new cards for cards that are held
 void Game::secondDeal()
 {
+	secondDealAllowed = false;
 	for (int i = 0; i < 5; i++)
 	{
 		if (player->cardSelected(i) == false)
@@ -369,17 +388,22 @@ void Game::restartHand()
 		player->drawCard(dealer->deal()); //give player 5 new cards
 		dealer->drawCard(dealer->deal()); //give dealer 5 new cards
 	}
+	secondDealAllowed = true;
 }
 
 //default constructor //sets up game graphics
 Game::Game()
 {
-	srand(time(0));
+	srand(time(0)); //seed random generator
 	rand();
+
 	player = new PokerPlayer;
 	dealer = new Dealer;
 
+	secondDealAllowed = false;
+
 	restartHand();
+
 
 	//create window for game to played in
 	window = new sf::RenderWindow(sf::VideoMode(1600, 1000), "Jacks or Better");

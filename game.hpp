@@ -35,13 +35,14 @@ class Game
 		bool gameMenuNeeded;
 		bool textEntered;
 		bool textBoxNeeded;
+		bool secondDealAllowed;
 		sf::RenderWindow* window = nullptr;
 		sf::Event event;
 		bool mousePressed;
 		sf::Vector2i* mousePos = nullptr;
 		sf::Texture texture;
 		sf::Sprite cardSprites[5]; 
-		sf::Sprite tempCardSprite;
+		sf::Sprite dealerCardSprite;
 		sf::Sprite dealSprite;
 		sf::Sprite bet1Sprite;
 		sf::Sprite bet5Sprite;
@@ -58,6 +59,7 @@ class Game
 		void drawScore();		 //draw players credits
 		void drawCards();
 		void drawHold();   
+		void drawNewHandInstructions();
 		void restartHand();
 		void secondDeal();
 		void renderTextBox();    //draw text box to screen and any characters typed in
