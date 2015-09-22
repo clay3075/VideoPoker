@@ -43,9 +43,11 @@ class Game
 		sf::Texture texture;
 		sf::Sprite cardSprites[5]; 
 		sf::Sprite dealerCardSprite;
+		sf::Sprite callSprite;
+		sf::Sprite raiseSprite;
 		sf::Sprite dealSprite;
-		sf::Sprite bet1Sprite;
-		sf::Sprite bet5Sprite;
+		sf::Sprite checkSprite;
+		sf::Sprite foldSprite;
 		sf::Sprite newGameSprite;
 		sf::Sprite resumeSprite;
 		sf::Font font;

@@ -66,14 +66,26 @@ void Game::update()
 			}
 		}
 
-		//if player presses bet1 button 
-		if (bet1Sprite.getGlobalBounds().contains(static_cast<sf::Vector2f>(*mousePos)))
+		//if player presses check button 
+		if (checkSprite.getGlobalBounds().contains(static_cast<sf::Vector2f>(*mousePos)))
 		{
 			
 		}
 
-		//if player presses bet5 button 
-		if (bet5Sprite.getGlobalBounds().contains(static_cast<sf::Vector2f>(*mousePos)))
+		//if player presses fold button 
+		if (foldSprite.getGlobalBounds().contains(static_cast<sf::Vector2f>(*mousePos)))
+		{
+			
+		}
+
+		//if player presses call button 
+		if (callSprite.getGlobalBounds().contains(static_cast<sf::Vector2f>(*mousePos)))
+		{
+			
+		}
+
+		//if player presses raise button 
+		if (raiseSprite.getGlobalBounds().contains(static_cast<sf::Vector2f>(*mousePos)))
 		{
 			
 		}
@@ -260,38 +272,62 @@ void Game::renderTextBox()
 
 void Game::drawButtons()
 {
-	//draw bet1 button
-	if (!texture.loadFromFile("images/bet1.png")) //load image
+	//draw call button
+	if (!texture.loadFromFile("images/call.png")) //load image
 	{
-		throw "bet1 error."; 
+		throw "call sprite error."; 
 	}
-	bet1Sprite.setTexture(texture); //create button sprite
-	bet1Sprite.setScale(sf::Vector2f(1.0f, 1.0f));            //set size
-	bet1Sprite.setPosition(sf::Vector2f(400.0f, 900.0f));   //set postion
-	window->draw(bet1Sprite);
+	callSprite.setTexture(texture); //create button sprite
+	callSprite.setScale(sf::Vector2f(1.2f, 1.2f));            //set size
+	callSprite.setPosition(sf::Vector2f(625.0f, 900.0f));   //set postion
+	window->draw(callSprite);
 	//
 	//
 
-	//draw bet5 button
-	if (!texture.loadFromFile("images/bet5.png")) //load image
+	//draw raise button
+	if (!texture.loadFromFile("images/raise.png")) //load image
 	{
-		throw "bet5 error."; 
+		throw "raise sprite error."; 
 	}
-	bet5Sprite.setTexture(texture); //create button sprite
-	bet5Sprite.setScale(sf::Vector2f(1.0f, 1.0f));            //set size
-	bet5Sprite.setPosition(sf::Vector2f(900.0f, 900.0f));   //set postion
-	window->draw(bet5Sprite);
+	raiseSprite.setTexture(texture); //create button sprite
+	raiseSprite.setScale(sf::Vector2f(1.2f, 1.2f));            //set size
+	raiseSprite.setPosition(sf::Vector2f(1070.0f, 900.0f));   //set postion
+	window->draw(raiseSprite);
+	//
+	//
+
+	//draw check button
+	if (!texture.loadFromFile("images/check.png")) //load image
+	{
+		throw "check sprite error."; 
+	}
+	checkSprite.setTexture(texture); //create button sprite
+	checkSprite.setScale(sf::Vector2f(1.2f, 1.2f));            //set size
+	checkSprite.setPosition(sf::Vector2f(400.0f, 900.0f));   //set postion
+	window->draw(checkSprite);
+	//
+	//
+
+	//draw fold button
+	if (!texture.loadFromFile("images/fold.png")) //load image
+	{
+		throw "fold sprite error."; 
+	}
+	foldSprite.setTexture(texture); //create button sprite
+	foldSprite.setScale(sf::Vector2f(1.2f, 1.2f));            //set size
+	foldSprite.setPosition(sf::Vector2f(850.0f, 900.0f));   //set postion
+	window->draw(foldSprite);
 	//
 	//
 
 	//draw deal button
 	if (!texture.loadFromFile("images/deal.png")) //load image
 	{
-		throw "bet5 error."; 
+		throw "deal sprite error."; 
 	}
 	dealSprite.setTexture(texture); //create button sprite
-	dealSprite.setScale(sf::Vector2f(1.0f, 1.0f));            //set size
-	dealSprite.setPosition(sf::Vector2f(1250.0f, 900.0f));   //set postion
+	dealSprite.setScale(sf::Vector2f(.9f, 1.0f));            //set size
+	dealSprite.setPosition(sf::Vector2f(1290.0f, 900.0f));   //set postion
 	window->draw(dealSprite);
 	//
 	//
