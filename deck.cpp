@@ -14,7 +14,7 @@
 const int DECKSIZE = 13;
 const int SUITSIZE = 4;
 const string FACES[DECKSIZE]{"Ace","Two","Three","Four","Five","Six","Seven","Eight","Nine","Ten","Jack","Queen","King"};
-const int    VALUES[DECKSIZE]{ 1  ,  2 ,    3  ,  4   ,  5   , 6   ,  7    ,  8    , 9    , 10  , 10   , 10    , 10   };
+const int    VALUES[DECKSIZE]{ 1  ,  2 ,    3  ,  4   ,  5   , 6   ,  7    ,  8    , 9    , 10  , 11   , 12    , 13   }; //changed actual value of last 3 to distinguish for hands
 const string SUIT[SUITSIZE]{"Heart","Diamond","Spade","Club"};
 
 //a private function used to clear used cards so that they can be used in the game again

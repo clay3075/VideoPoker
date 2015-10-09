@@ -29,7 +29,7 @@ string Card::getSuit()
 }
 
 //returns the actual value of the card as an int
-int Card::getValue()
+int Card::getValue() const
 {
 	return value;
 }
@@ -50,5 +50,18 @@ void   Card::select()
 bool   Card::isSelected()
 {
 	return selected;
+}
+
+//overloaded less than operator
+bool Card::operator< (const Card& card) const
+{
+	bool flag = false;
+
+	if (getValue() < card.getValue())
+	{
+		flag = true;
+	}
+	
+	return flag;
 }
 

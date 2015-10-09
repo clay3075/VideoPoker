@@ -354,6 +354,16 @@ void Game::drawNewHandInstructions()
 		text.setCharacterSize(60);
 		text.setPosition(sf::Vector2f(450.0f,450.0f));
 		window->draw(text);
+
+		text.setString(player->evaluate());
+		text.setColor(sf::Color::Black);
+		text.setCharacterSize(90);
+		text.setPosition(sf::Vector2f(625.0f,750.0f));
+		window->draw(text);
+
+		text.setString(dealer->evaluate());
+		text.setPosition(sf::Vector2f(625.0f,250.0f));
+		window->draw(text);
 	}
 }
 
@@ -421,6 +431,7 @@ void Game::restartHand()
 		player->drawCard(dealer->deal()); //give player 5 new cards
 		dealer->drawCard(dealer->deal()); //give dealer 5 new cards
 	}
+
 	secondDealAllowed = true;
 }
 
