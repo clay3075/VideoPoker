@@ -33,21 +33,25 @@ void Hand::calcWorth()
 		string nameOfHand = getNameOfHand();
 		if(nameOfHand == "Royal Flush")
 		{
-			worth = 8;
+			worth = 9;
 		}
 		else if(nameOfHand == "Straight Flush")
 		{
-			worth = 7;
+			worth = 8;
 		}
-		else if(nameOfHand == "Flush")
+		else if(nameOfHand == "Four of a kind")
 		{
-			worth = 6;
+			worth = 7;
 		}
 		else if(nameOfHand == "Full House")
 		{
+			worth = 6;
+		}
+		else if(nameOfHand == "Flush")
+		{
 			worth = 5;
 		}
-		else if(nameOfHand == "Four of a kind")
+		else if(nameOfHand == "Straight")
 		{
 			worth = 4;
 		}
@@ -273,7 +277,10 @@ string Hand::getNameOfHand()
 		}
 	}
 	if (next == (cards.at(0).getValue() + 5))
+	{
 		straight = true;
+		result = "Straight";
+	}
 
 	if (sameSuit)
 		result = "Flush";
