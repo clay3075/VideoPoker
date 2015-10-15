@@ -5,7 +5,7 @@
  */
 
 #include "pokerplayer.hpp"
-
+#include <iostream>
 //will null the moneyBet variable and change betPlaced to false
 void PokerPlayer::clearBet()
 {
@@ -55,6 +55,38 @@ void PokerPlayer::placeBet(const int betAmount)
 		betPlaced = true;
 	}
 	return;
+}
+
+bool PokerPlayer::findWinner(PokerPlayer* otherPlayer)
+{
+	bool thisPlayerWon = true;
+
+	if (otherPlayer->getWorth() > this->getWorth())
+		thisPlayerWon = false;
+	if (this->getWorth() == otherPlayer->getWorth()) //if players have same hand
+	{
+		//see which pair is higher
+		if (otherPlayer->getPairValue() > this->getPairValue())
+		{
+			thisPlayerWon = false;
+		}
+		else
+		{
+			//check for higher card
+			//if players have same high card check next highest card and so on
+			int i = getNumberOfCardsInHand();
+			do
+			{
+				i--;
+				if (otherPlayer->getCardValue(i) > this->getCardValue(i))
+				{
+					thisPlayerWon = false;
+				}
+			} while(i > 0 && (this->getCardValue(i) == otherPlayer->getCardValue(i)));
+		}
+	}
+
+	return thisPlayerWon;
 }
 
 

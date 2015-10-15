@@ -12,7 +12,7 @@
 #include "player.hpp"
 #include "hand.hpp"
 #include "SFML/Graphics.hpp"
- #include <vector>
+#include <vector>
 	using std::vector;
 
 class PokerPlayer : public Player, public Hand
@@ -28,6 +28,7 @@ class PokerPlayer : public Player, public Hand
 			{return moneyBet;}
 		void clearBet(); //will null the moneyBet variable and change betPlaced to false
 		bool isBetPlaced(); //will return true if player has put in a bet false otherwise
+		bool findWinner(PokerPlayer* otherPlayer); //returns true if this player had winning hand
 		void show(sf::Sprite* sprite, sf::RenderWindow* window, sf::Texture& texture, PokerPlayer* player); //shows hand to screen
 };
 

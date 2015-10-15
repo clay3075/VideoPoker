@@ -132,9 +132,12 @@ void Game::update()
 		//if text is a printable character
 		if (event.text.unicode < 128 && nameCharCount < 16)
 		{	
-			player->setName(player->getName() + static_cast<char>(event.text.unicode)); //add text to players name
-			textEntered = false;
-			nameCharCount += 1;
+			if (static_cast<char>(event.text.unicode) != '\n')
+			{
+				player->setName(player->getName() + static_cast<char>(event.text.unicode)); //add text to players name
+				textEntered = false;
+				nameCharCount += 1;
+			}
 			if (static_cast<char>(event.text.unicode) == '\n')
 			{
 				textBoxNeeded = false;
@@ -183,6 +186,7 @@ void Game::render()
 		drawCards();
 		drawHold();
 		drawNewHandInstructions();
+		drawWinnerAndHandSpecifications();
 	}
 
 	//show window to screen
@@ -354,15 +358,43 @@ void Game::drawNewHandInstructions()
 		text.setCharacterSize(60);
 		text.setPosition(sf::Vector2f(450.0f,450.0f));
 		window->draw(text);
+	}
+}
 
-		text.setString(player->evaluate());
+void Game::drawWinnerAndHandSpecifications()
+{
+	if (!secondDealAllowed)
+	{
+		//draws to screen type of hand player had
+		text.setString(player->getNameOfHand());
 		text.setColor(sf::Color::Black);
 		text.setCharacterSize(90);
 		text.setPosition(sf::Vector2f(625.0f,750.0f));
 		window->draw(text);
 
-		text.setString(dealer->evaluate());
+		//draws to screen type of hand dealer had
+		text.setString(dealer->getNameOfHand());
 		text.setPosition(sf::Vector2f(625.0f,250.0f));
+		window->draw(text);
+
+		//************************* Now determine winner **************************
+		//player is winner
+		if (player->findWinner(dealer))
+		{
+			text.setString(player->getName() + " Won");
+		}
+		else if (dealer->findWinner(player)) //if other player won
+		{
+			text.setString(dealer->getName() + " Won");
+			//std::cout << "Dealer\n";
+		}
+		else
+		{
+			text.setString("Tie");
+		}
+		text.setColor(sf::Color::Red);
+		text.setCharacterSize(60);
+		text.setPosition(sf::Vector2f(650.0f,20.0f));
 		window->draw(text);
 	}
 }

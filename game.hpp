@@ -64,6 +64,8 @@ class Game
 		void drawNewHandInstructions();
 		void restartHand();
 		void secondDeal();
+		void drawWinnerAndHandSpecifications();
+		int getPairValue(); //returns face value of card that has a pair or more
 		void renderTextBox();    //draw text box to screen and any characters typed in
 		void saveGame();		 //will save game information to a file called "savedinfo.txt"
 		bool savedGameExists();  //will return true if there is a "savedinfo.txt" file false otherwise

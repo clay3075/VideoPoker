@@ -20,12 +20,53 @@ void Hand::calcWorth()
 	}
 	else
 	{
-		int points = 0; //accumulator
+		//implementation for blackjack
+		/*int points = 0; //accumulator
 		for (unsigned int i = 0; i < cards.size(); i++) //for each card
 		{
 			points += cards.at(i).getValue(); //add up card values
 		}
-		worth = points;
+		worth = points;*/
+	
+
+		//custom implementation for poker
+		string nameOfHand = getNameOfHand();
+		if(nameOfHand == "Royal Flush")
+		{
+			worth = 8;
+		}
+		else if(nameOfHand == "Straight Flush")
+		{
+			worth = 7;
+		}
+		else if(nameOfHand == "Flush")
+		{
+			worth = 6;
+		}
+		else if(nameOfHand == "Full House")
+		{
+			worth = 5;
+		}
+		else if(nameOfHand == "Four of a kind")
+		{
+			worth = 4;
+		}
+		else if(nameOfHand == "Three of a kind")
+		{
+			worth = 3;
+		}
+		else if(nameOfHand == "Two Pair")
+		{
+			worth = 2;
+		}
+		else if(nameOfHand == "Pair")
+		{
+			worth = 1;
+		}
+		else
+		{
+			worth = 0;
+		}
 	}
 	return;
 } 
@@ -43,10 +84,11 @@ Hand::Hand()
 //@param card Is a Card value used to mirror the existence of a card being drawn
 void Hand::drawCard(Card card)
 {
-	cards.push_back(card);
-	calcWorth();
+	cards.push_back(card); //add card to deck
+	//sort cards as they are accumulated
 	if (cards.size() != 0)
 		sort();
+	calcWorth();
 	return;
 }
 //returns a vector holding the cards in hand
@@ -77,15 +119,15 @@ int Hand::getWorth()
 }
 
 //if ace is in hand changes ace value
-void Hand::changeAceValue()
+void Hand::changeAceValue(int val)
 {
 	for (unsigned int i = 0; i < cards.size(); i++)
 	{
 		if (cards.at(i).getValue() == 1)
 		{
-			cards.at(i).changeValue(11);
+			cards.at(i).changeValue(val);
 		}
-		else if (cards.at(i).getValue() == 11)
+		else if (cards.at(i).getValue() == val)
 		{
 			cards.at(i).changeValue(1);
 		}
@@ -111,38 +153,52 @@ void Hand::replaceCard(int i, Card card)
 	sort();
 }
 
-/*
-//overloaded assignment operator
-bool Hand::operator= (const Hand& hand)
+
+/*bool Hand::evaluate()
 {
-	this->cards = hand.cards;
-	this->calcWorth();
-}
-*/
+	string nameOfHand = getNameOfHand();
+	return;
+}*/
 
 //checks for royal flush etc.. returns as a string the result of the hand
-string Hand::evaluate()
+string Hand::getNameOfHand()
 {
 	string result = "Crappy Hand";
 
-	//check for royal flush
-	//first find lowest value card in hand
-	Card lowest = cards.at(0);
+	if (cards.size())
+	{
+		//first find lowest value card in hand
+		Card lowest  = cards.at(0);
+		//find highest value card in hand
+		Card highest = cards.at(cards.size() - 1);
 
-	if (lowest.getValue() == 1) //if ace is lowest card and there's no two change value of ace
-	{	
-		bool hasTwo = false;
-		for (int i = 0; i < static_cast<int>(cards.size()); i++)
-		{
-			if (cards.at(i).getValue() == 2)
-				hasTwo = true;
+		if (lowest.getValue() == 1) //if ace is lowest card and there's no two change value of ace
+		{	
+			bool hasTwo = false; //flag
+			for (int i = 0; i < static_cast<int>(cards.size()); i++) //go through hand
+			{
+				if (cards.at(i).getValue() == 2) //if theres a two in hand
+					hasTwo = true;
+			}
+			if (!hasTwo) //if theres a two in hand
+				changeAceValue();
 		}
-		if (!hasTwo)
-			changeAceValue();
+		else if (highest.getValue() == 14) //if ace is highest card make sure theres a king
+		{								   //if their isnt change ace value to lowest card
+			bool hasKing = false; //flag
+			for (int i = 0; i < static_cast<int>(cards.size()); i++) //go through hand
+			{
+				if (cards.at(i).getValue() == 14) //if theres a king
+					hasKing = true;
+			}
+			if (!hasKing) //if theres a king
+				changeAceValue();
+		}
 	}
+
 	int highestCount = 0;
 	int highestCount2 = 0;
-	int secondeHighestcount = 0;
+	int secondHighestcount = 0;
 	bool encountered[] = {false, false, false, false, false};
 	//check for pair, 2 pairs, three of a kind, 4 of a kind, and full house
 	for (int i = 0; i < static_cast<int>(cards.size()); i++)
@@ -162,13 +218,18 @@ string Hand::evaluate()
 		}
 		if (highestCount > highestCount2)
 		{
-			secondeHighestcount = highestCount2;
+			//secondHighestcount = highestCount2;
 			highestCount2 = highestCount;
 		}
+		
 	}
 	if (highestCount2 == 2)
 	{
 		result = "Pair";
+		/*if (secondHighestcount == highestCount2)
+		{
+			result = "Two Pair";
+		}*/
 	}
 	if (highestCount2 == 3)
 	{
@@ -178,7 +239,7 @@ string Hand::evaluate()
 	{
 		result = "Four of a kind";
 	}
-	if (secondeHighestcount == 2 && highestCount2 == 3)
+	if (secondHighestcount == 2 && highestCount2 == 3)
 	{
 		result = "Full House.";
 	}
@@ -195,7 +256,7 @@ string Hand::evaluate()
 			sameSuit = false;
 		}	
 	}
-
+	//check for flush
 	int iterator = 0;
 	int next = cards.at(0).getValue() + 1;
 	bool straight = false;
@@ -229,21 +290,36 @@ string Hand::evaluate()
 	return result;
 }
 
+//returns -1 if no pairs
+int Hand::getPairValue()
+{
+	int pairValue = -1;
+	for (int i = 0; i < static_cast<int>(cards.size()) - 1; i++)
+	{
+		for (int j = 0; j < static_cast<int>(cards.size()) - 1; j++)
+		{
+			if ((i != j) && cards.at(i).getValue() == cards.at(j).getValue())
+			{
+				pairValue = cards.at(i).getValue();
+			}
+		}
+	}
+	return pairValue;
+}
 
 //bubble sort cards in hand
 void Hand::sort()
 {
 	Card temp;
-	for (int i = 0; i < static_cast<int>(cards.size());i++)
+	for (int i = 0; i < static_cast<int>(cards.size());i++) //for each card
 	{
-
-		for (int j = 0; j < static_cast<int>(cards.size() - 1);j++)
+		for (int j = 0; j < static_cast<int>(cards.size() - 1);j++) //move through the hand
 		{
-			if (cards.at(j + 1) < cards.at(j))
+			if (cards.at(j + 1) < cards.at(j)) //if a card is less than another 
 			{
-				temp = cards.at(j+1);
-				cards.at(j+1) = cards.at(j);
-				cards.at(j) = temp;
+				temp = cards.at(j+1);        //
+				cards.at(j+1) = cards.at(j); //swap cards
+				cards.at(j) = temp;          //
 			}
 		}
 		
