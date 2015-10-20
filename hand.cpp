@@ -155,6 +155,7 @@ void Hand::replaceCard(int i, Card card)
 {
 	cards.at(i) = card;
 	sort();
+	calcWorth();
 }
 
 
@@ -185,7 +186,10 @@ string Hand::getNameOfHand()
 					hasTwo = true;
 			}
 			if (!hasTwo) //if theres a two in hand
+			{
 				changeAceValue();
+				sort();
+			}
 		}
 		else if (highest.getValue() == 14) //if ace is highest card make sure theres a king
 		{								   //if their isnt change ace value to lowest card
@@ -196,7 +200,10 @@ string Hand::getNameOfHand()
 					hasKing = true;
 			}
 			if (!hasKing) //if theres a king
+			{
 				changeAceValue();
+				sort();
+			}
 		}
 	}
 
@@ -222,7 +229,7 @@ string Hand::getNameOfHand()
 		}
 		if (highestCount > highestCount2)
 		{
-			//secondHighestcount = highestCount2;
+			secondHighestcount = highestCount2;
 			highestCount2 = highestCount;
 		}
 		
@@ -230,10 +237,10 @@ string Hand::getNameOfHand()
 	if (highestCount2 == 2)
 	{
 		result = "Pair";
-		/*if (secondHighestcount == highestCount2)
+		if (checkForSecondPairandValue() != -1)
 		{
 			result = "Two Pair";
-		}*/
+		}
 	}
 	if (highestCount2 == 3)
 	{
@@ -301,7 +308,7 @@ string Hand::getNameOfHand()
 int Hand::getPairValue()
 {
 	int pairValue = -1;
-	for (int i = 0; i < static_cast<int>(cards.size()) - 1; i++)
+	/*for (int i = 0; i < static_cast<int>(cards.size()) - 1; i++)
 	{
 		for (int j = 0; j < static_cast<int>(cards.size()) - 1; j++)
 		{
@@ -310,7 +317,49 @@ int Hand::getPairValue()
 				pairValue = cards.at(i).getValue();
 			}
 		}
+	}*/
+
+	for (int i = 0; i < static_cast<int>(cards.size()) - 1; i++)
+	{
+		if (cards.at(i).getValue() == cards.at(i+1).getValue())
+		{
+			pairValue = cards.at(i).getValue();
+			i++;
+		}
 	}
+
+	return pairValue;
+}
+
+int Hand::checkForSecondPairandValue()
+{
+	int pairValue = -1;
+	int otherPairValue = getPairValue();
+	/*for (int i = 0; i < static_cast<int>(cards.size()) - 1; i++)
+	{
+		std::cout << "First Value: " << otherPairValue << std::endl;
+		for (int j = 0; j < static_cast<int>(cards.size()) - 1; j++)
+		{
+			std::cout << otherPairValue << " != " << cards.at(i).getValue() << std::endl;
+			if ((i != j) && (otherPairValue != cards.at(j).getValue()) /*&& (getPairValue() != cards.at(j).getValue()) && (cards.at(i).getValue() == cards.at(j).getValue()))
+			{
+				pairValue = cards.at(i).getValue();
+			}
+		}
+	}
+	std::cout << "Second Value: " << pairValue << std::endl;*/
+
+	for (int i = 0; i < static_cast<int>(cards.size()) - 1; i++)
+	{
+		//std::cout << "getPairValue(): " << getPairValue() << std::endl;
+		//std::cout << cards.at(i).getValue() <<" != "<<otherPairValue << std::endl;
+		if ((cards.at(i).getValue() != otherPairValue) && (cards.at(i).getValue() == cards.at(i+1).getValue()))
+		{
+			pairValue = cards.at(i).getValue();
+			i++;
+		}
+	}
+	//std::cout << "secondPairValue: " << pairValue << std::endl;
 	return pairValue;
 }
 
@@ -318,7 +367,7 @@ int Hand::getPairValue()
 void Hand::sort()
 {
 	Card temp;
-	for (int i = 0; i < static_cast<int>(cards.size());i++) //for each card
+	for (int i = 0; i < static_cast<int>(cards.size()-1);i++) //for each card
 	{
 		for (int j = 0; j < static_cast<int>(cards.size() - 1);j++) //move through the hand
 		{

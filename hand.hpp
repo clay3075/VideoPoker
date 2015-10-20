@@ -39,6 +39,7 @@ public:
 	string evaluate(); //returns as a string the result of the hand
 	int getPairValue(); //returns face value of card that has a pair or more
 	string getNameOfHand(); //checks for royal flush etc.. returns as a string the result of the hand
+	int checkForSecondPairandValue(); //checks for a second pair in deck returns negative if there isnt one or value otherwise
 	//bool operator= (const Hand& hand); //overloaded assignment operator
 	void sort();
 };
