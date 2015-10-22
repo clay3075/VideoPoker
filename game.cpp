@@ -69,6 +69,10 @@ void Game::update()
 		//if player presses check button 
 		if (checkSprite.getGlobalBounds().contains(static_cast<sf::Vector2f>(*mousePos)))
 		{
+			secondDealAllowed = false;
+			adjustScore();
+			player->clearBet();
+			dealer->clearBet();
 		}
 
 		//if player presses fold button 
@@ -91,7 +95,10 @@ void Game::update()
 		if (dealSprite.getGlobalBounds().contains(static_cast<sf::Vector2f>(*mousePos)))
 		{
 			if (secondDealAllowed) //if its first round allow another round to be dealt
+			{
 				secondDeal();
+				adjustScore();
+			}
 			else				   //if hand is over restart hand
 				restartHand();
 		}
@@ -343,6 +350,7 @@ void Game::drawScore()
 	text.setCharacterSize(70);
 	text.setColor(sf::Color::Yellow);
 	window->draw(text);
+	text.setString("Score: " + std::to_string(dealer->getScore()));
 	text.setPosition(sf::Vector2f(1200.0f,10.0f));
 	window->draw(text);
 }
@@ -427,6 +435,16 @@ void Game::saveGame()
 
 }
 
+void Game::adjustScore()
+{
+	//determine winner and adjust score
+	if (player->getScore() >= 10 && dealer->getScore() >= 10)
+	{
+	player->calcScore(player->findWinner(dealer)); //adjust for player
+	dealer->calcScore(dealer->findWinner(player)); //adjust for dealer
+	}
+}
+
 //will return true if there is a "savedinfo.txt" file false otherwise
 bool Game::savedGameExists()
 {
@@ -457,12 +475,22 @@ void Game::restartHand()
 {
 	player->clear();
 	dealer->clear();
+	player->clearBet();
+	dealer->clearBet();
 	dealer->shuffle();
 	for (int i = 0; i < 5; i++)
 	{
 		player->drawCard(dealer->deal()); //give player 5 new cards
 		dealer->drawCard(dealer->deal()); //give dealer 5 new cards
 	}
+	//if player has enough money for the initial buy in which is 10 here
+	//and if dealer or other player in this case has enough for buy in.
+	player->placeBet(10);
+	dealer->placeBet(10);
+
+	//
+	//need to handle if player does not have enough money
+	//
 
 	secondDealAllowed = true;
 }

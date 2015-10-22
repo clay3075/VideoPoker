@@ -68,6 +68,7 @@ class Game
 		void renderTextBox();    //draw text box to screen and any characters typed in
 		void saveGame();		 //will save game information to a file called "savedinfo.txt"
 		bool savedGameExists();  //will return true if there is a "savedinfo.txt" file false otherwise
+		void adjustScore();
 	public:	
 		Game(); //default constructor //sets up game graphics
 		void run(); //will be used to play the game

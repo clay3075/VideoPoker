@@ -49,7 +49,7 @@ PokerPlayer::PokerPlayer(int score) : Player(), Hand()
 //will be used to place a bet
 void PokerPlayer::placeBet(const int betAmount)
 {
-	if (betAmount >= 0)
+	if (betAmount > 0 && betAmount <= score)
 	{
 		moneyBet += betAmount;
 		betPlaced = true;
@@ -68,7 +68,6 @@ bool PokerPlayer::findWinner(PokerPlayer* otherPlayer)
 		//see which pair is higher
 		if (otherPlayer->getPairValue() > this->getPairValue())
 		{
-			std::cout << "in" << std::endl;
 			thisPlayerWon = false;
 		}
 		else if ((otherPlayer->getPairValue() > this->getPairValue()) && otherPlayer->checkForSecondPairandValue() > this->checkForSecondPairandValue())
