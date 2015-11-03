@@ -469,6 +469,14 @@ void Game::secondDeal()
 			player->replaceCard(i,dealer->deal());
 		}
 	}
+	dealer->decideHand();
+	for (int i = 0; i < 5; i++)
+	{
+		if (dealer->cardSelected(i) == false)
+		{
+			dealer->replaceCard(i,dealer->deal());
+		}
+	}
 }
 
 void Game::restartHand()

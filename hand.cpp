@@ -96,7 +96,7 @@ void Hand::drawCard(Card card)
 	return;
 }
 //returns a vector holding the cards in hand
-vector<Card>& Hand::getCards()
+vector<Card>& Hand::getCards() 
 {
 	return cards;
 }

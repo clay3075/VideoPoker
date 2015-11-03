@@ -22,6 +22,7 @@ class PokerPlayer : public Player, public Hand
 		bool betPlaced;
 	public:
 		PokerPlayer(int score = 200);
+		PokerPlayer(Hand &hand) : Hand(hand.getCards()){};
 		void placeBet(const int betAmount = 0); //will be used to place a bet
 		void calcScore(bool wonOrLost); //will be used to keep score in a valid state as influences are made on it
 		int  getBet() //returns the current total the bet is at
