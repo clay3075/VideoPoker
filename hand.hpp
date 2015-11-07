@@ -22,7 +22,7 @@ protected:
 public:	
 	Hand(); 				  //default constructor used to initialize hand to blank values
 	Hand(const vector<Card>& cards) //constructor used for initilizing hand of 5
-			{this->cards = cards;}
+			{this->cards = cards;calcWorth();}
 	void drawCard(Card card); //mirrors the drawing of a card from a deck and adds it to the cards in hand and then calculates the hands worth
 	vector<Card>& getCards();  //returns a vector holding the cards in hand
 	int getCardValue(int position) //returns value of card in hand position given

@@ -36,18 +36,20 @@ void Dealer::show(sf::Sprite sprite, sf::RenderWindow* window, sf::Texture& text
 	//draw cards to screen
 	for (unsigned int i = 0; i < player->getNumberOfCardsInHand(); i++) //for each card in hand
 	{
-		if (showCards)
+		//for testing purposes need to see cards
+		//
+		//if (showCards)
 		{
 			if (!texture.loadFromFile("images/" + tempCards.at(i).getFace() + tempCards.at(i).getSuit() + ".jpg"))
 			{
 				throw "Sprite Error";
 			}
 		}
-		else
+		//else
 		{
-			if (!texture.loadFromFile("images/card2.jpg"))
+			//if (!texture.loadFromFile("images/card2.jpg"))
 			{
-				throw "Sprite Error";
+				//throw "Sprite Error";
 			}
 		}
 		//
@@ -62,28 +64,48 @@ void Dealer::show(sf::Sprite sprite, sf::RenderWindow* window, sf::Texture& text
 //will calculate chances of winning and adjust strategy of hand based on it
 void Dealer::decideHand()
 {
-	const int NUMBER_OF_TEST_RUNS = 1000;
-	Hand testHand(getCards()); //testHand for finding best move
-	Deck testDeck = deck; 	   //testDeck for finding best move
+	info.index.clear();
+	info.winningPercentage = 0;
+	info.numberOfCardsToReplace = 0;
+
+	//const int NUMBER_OF_TEST_RUNS = 1000;
+	Hand testHand/*(getCards())*/; //testHand for finding best move
+	Deck testDeck; /* = deck;*/	   //testDeck for finding best move
 	int  newHandWins = 0;
 	double tempPercent = 0;
-	
+	int numTestRuns = 0;
+	int debugCounter = 0;
 	//check what happens if one card is removed from each possible position
 	for (int i = 0; i < 5; i++)
 	{
-		//test over 1000 deals for each new card
-		for (int j = 0; j < NUMBER_OF_TEST_RUNS; j++)
+		newHandWins = 0;
+		testDeck = deck;
+		for (int x = 0; x < i; x++)
+			testDeck.deal();
+		testHand = Hand(getCards());
+		
+		int temp = testDeck.cardsInDeck();
+		for (int j = 0; j < temp; j++)
 		{
+			numTestRuns++;
 			testHand.replaceCard(i, testDeck.deal());
-			Dealer tempDealer(testHand,testDeck); 
+			Dealer tempDealer(testHand,testDeck);
 			if (!(this->findWinner(&tempDealer)))
 			{
 				newHandWins++;
 			}
-			testHand = Hand(getCards());
-			testDeck = deck;
 		}
-		tempPercent = newHandWins / NUMBER_OF_TEST_RUNS;
+
+		debugCounter++;
+		tempPercent = static_cast<double>(newHandWins) / numTestRuns;
+
+		std::cout << debugCounter << std::endl;
+		std::cout << "Wins:" << newHandWins << std::endl;
+		std::cout << "%" << info.winningPercentage << std::endl;
+		std::cout << "tempPercent" << tempPercent << std::endl;
+		std::cout << "Runs:" << numTestRuns << std::endl;
+
+		numTestRuns = 0;
 		newHandWins = 0;
 		if (tempPercent > info.winningPercentage)
 		{
@@ -93,34 +115,27 @@ void Dealer::decideHand()
 			info.winningPercentage = tempPercent;
 		}
 
+		std::cout << "FinalPercent: " << info.winningPercentage << std::endl;
+
 	}
 
 	//after best hand has been decided make changes
 	if (info.winningPercentage > .55)
 	{
-		int index1 = -1, index2 = -1, index3 = -1;
-		if (info.index.size() == 1)
+		for (int j = 0; j < info.numberOfCardsToReplace; j++)
 		{
-			index1 = info.index.at(0);
-		}
-		else if (info.index.size() == 2)
-		{
-			index2 = info.index.at(1);
-		}
-		else
-		{
-			index3 = info.index.at(2);
-		}
-
-		for (int i = 0; i < 5; i++)
-		{
-			if (i != index1 && i != index2 && i != index3)
+			for (int i = 0; i < 5; i++)
 			{
-				selectCard(i);
+				if (info.index.at(j) != i)
+				{
+					std::cout << i << std::endl;
+					selectCard(i);
+					//selectCard(info.index.at(i));
+				}
 			}
 		}
 	}
-	std::cout << info.winningPercentage << std::endl;
+	
 
 }
 

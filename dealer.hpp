@@ -35,12 +35,12 @@ class Dealer: public PokerPlayer
 		Dealer(Hand& hand, Deck deck) : PokerPlayer(hand)
 		{
 			this->deck = deck;
-			Hand::calcWorth();
 		}
 		void shuffle(); //will randomize cards in deck by calling the Deck class shuffle() function
 		Card deal();   //will return a Card object from the "top" of the deck object
 		void show(sf::Sprite sprite, sf::RenderWindow* window, sf::Texture& texture, Dealer* player, bool showCards);
 		void decideHand(); //will calculate chances of winning and adjust strategy of hand based on it
+		int  cardsInDeck(){return deck.cardsInDeck();}
 };
 
  #endif

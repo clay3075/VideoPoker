@@ -27,6 +27,7 @@ void Deck::clear()
 Deck::Deck()
 {
 	Card *temp = nullptr; 
+	clear();
 	for(int j = 0; j < SUITSIZE; j++) //for each suit
 	{
 		for(int i = 0; i < DECKSIZE; i++) //for each type of card Face
@@ -45,6 +46,7 @@ void Deck::shuffle()
 {	
 	Card temp;
 	int  tempIndex;
+
 	//go through the deck 5 times making swaps along the way to mirror shuffling of a deck
 	for(int j = 0; j < 5; j++)
 	{
@@ -61,9 +63,9 @@ void Deck::shuffle()
 //will return a card from the top of the deck (return Card from cards vector)
 Card Deck::deal()
 {
-	static unsigned int timesdealt = 0; 
+	//static unsigned int timesdealt = 0; 
 	static Card temp;
-	if(timesdealt < cards.size()) //if cards are still in deck
+	if(timesdealt < static_cast<int>(cards.size())) //if cards are still in deck
 	{
 		temp = cards.at(timesdealt); //get card from top of deck
 		usedCards.push_back(temp);   //put card taken in used pile

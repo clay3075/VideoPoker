@@ -462,6 +462,7 @@ bool Game::savedGameExists()
 void Game::secondDeal()
 {
 	secondDealAllowed = false;
+	dealer->decideHand();
 	for (int i = 0; i < 5; i++)
 	{
 		if (player->cardSelected(i) == false)
@@ -469,7 +470,7 @@ void Game::secondDeal()
 			player->replaceCard(i,dealer->deal());
 		}
 	}
-	dealer->decideHand();
+	
 	for (int i = 0; i < 5; i++)
 	{
 		if (dealer->cardSelected(i) == false)

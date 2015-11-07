@@ -341,7 +341,7 @@ int Hand::checkForSecondPairandValue()
 		for (int j = 0; j < static_cast<int>(cards.size()) - 1; j++)
 		{
 			std::cout << otherPairValue << " != " << cards.at(i).getValue() << std::endl;
-			if ((i != j) && (otherPairValue != cards.at(j).getValue()) /*&& (getPairValue() != cards.at(j).getValue()) && (cards.at(i).getValue() == cards.at(j).getValue()))
+			if ((i != j) && (otherPairValue != cards.at(j).getValue()) && (getPairValue() != cards.at(j).getValue()) && (cards.at(i).getValue() == cards.at(j).getValue()))
 			{
 				pairValue = cards.at(i).getValue();
 			}
