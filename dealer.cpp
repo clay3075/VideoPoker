@@ -71,6 +71,7 @@ void Dealer::decideHand()
 	//const int NUMBER_OF_TEST_RUNS = 1000;
 	Hand testHand/*(getCards())*/; //testHand for finding best move
 	Deck testDeck; /* = deck;*/	   //testDeck for finding best move
+	Deck testDeck2;
 	int  newHandWins = 0;
 	double tempPercent = 0;
 	int numTestRuns = 0;
@@ -80,8 +81,8 @@ void Dealer::decideHand()
 	{
 		newHandWins = 0;
 		testDeck = deck;
-		for (int x = 0; x < i; x++)
-			testDeck.deal();
+		//for (int x = 0; x < i; x++)
+		//	testDeck.deal();
 		testHand = Hand(getCards());
 		
 		int temp = testDeck.cardsInDeck();
@@ -96,14 +97,7 @@ void Dealer::decideHand()
 			}
 		}
 
-		debugCounter++;
 		tempPercent = static_cast<double>(newHandWins) / numTestRuns;
-
-		std::cout << debugCounter << std::endl;
-		std::cout << "Wins:" << newHandWins << std::endl;
-		std::cout << "%" << info.winningPercentage << std::endl;
-		std::cout << "tempPercent" << tempPercent << std::endl;
-		std::cout << "Runs:" << numTestRuns << std::endl;
 
 		numTestRuns = 0;
 		newHandWins = 0;
@@ -114,16 +108,59 @@ void Dealer::decideHand()
 			info.index.push_back(i);
 			info.winningPercentage = tempPercent;
 		}
+	}  
+	//check for two card replacements
+	
+	for (int first = 0; first < 4; first++) //for first four cards
+	{
+		std::cout << first << std::endl;
+		for (int second = first + 1; second < 5; second++)
+		{
+			newHandWins = 0;
+			numTestRuns = 0;
+			testDeck = deck;
+			testDeck2 = deck;
+			testDeck2.deal();
 
-		std::cout << "FinalPercent: " << info.winningPercentage << std::endl;
+			for (int j = 0; j < deck.cardsInDeck(); j++) //for number of cards in deck
+			{
+				numTestRuns++;
+				testHand = Hand(getCards());
 
+				testHand.replaceCard(first, testDeck.deal());
+				if(j != deck.cardsInDeck() - 2)
+					testHand.replaceCard(second, testDeck2.deal());
+
+				Dealer tempDealer(testHand,testDeck);
+				if (!(this->findWinner(&tempDealer)))
+				{
+					newHandWins++;
+				}
+			}
+			tempPercent = static_cast<double>(newHandWins) / numTestRuns;
+
+			std::cout << "tempPercent:" << tempPercent << std::endl;
+			std::cout << "runs:" << numTestRuns << std::endl;
+			std::cout << "wins:" << newHandWins << std::endl;
+
+			if (tempPercent > info.winningPercentage)
+			{
+				info.index.clear();
+				info.numberOfCardsToReplace = 2;
+				info.index.push_back(first);
+				info.index.push_back(second);
+				info.winningPercentage = tempPercent;
+			}
+		}
 	}
+	
 
 	//after best hand has been decided make changes
 	if (info.winningPercentage > .55)
 	{
 		for (int j = 0; j < info.numberOfCardsToReplace; j++)
 		{
+			std::cout << "replace" << info.numberOfCardsToReplace << std::endl;
 			for (int i = 0; i < 5; i++)
 			{
 				if (info.index.at(j) != i)
@@ -134,6 +171,17 @@ void Dealer::decideHand()
 				}
 			}
 		}
+		/*if (info.numberOfCardsToReplace == 1)
+		{
+			selectCard(info.index.at(0));
+			std::cout << "one" << info.index.at(0) << std::endl;
+		}
+		else if (info.numberOfCardsToReplace == 2)
+		{
+			selectCard(info.index.at(0));
+			selectCard(info.index.at(1));
+			std::cout << "two" << info.index.at(0) << info.index.at(1) << std::endl;
+		}*/
 	}
 	
 
