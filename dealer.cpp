@@ -124,17 +124,20 @@ void Dealer::decideHand()
 
 			for (int j = 0; j < deck.cardsInDeck(); j++) //for number of cards in deck
 			{
-				numTestRuns++;
-				testHand = Hand(getCards());
-
+				
 				testHand.replaceCard(first, testDeck.deal());
-				if(j != deck.cardsInDeck() - 2)
+				for (int p = 0; p < deck.cardsInDeck() - 1; p++)
+				{
+					numTestRuns++;
+					testHand = Hand(getCards());
+
 					testHand.replaceCard(second, testDeck2.deal());
 
-				Dealer tempDealer(testHand,testDeck);
-				if (!(this->findWinner(&tempDealer)))
-				{
-					newHandWins++;
+					Dealer tempDealer(testHand,testDeck);
+					if (!(this->findWinner(&tempDealer)))
+					{
+						newHandWins++;
+					}
 				}
 			}
 			tempPercent = static_cast<double>(newHandWins) / numTestRuns;
@@ -171,17 +174,6 @@ void Dealer::decideHand()
 				}
 			}
 		}
-		/*if (info.numberOfCardsToReplace == 1)
-		{
-			selectCard(info.index.at(0));
-			std::cout << "one" << info.index.at(0) << std::endl;
-		}
-		else if (info.numberOfCardsToReplace == 2)
-		{
-			selectCard(info.index.at(0));
-			selectCard(info.index.at(1));
-			std::cout << "two" << info.index.at(0) << info.index.at(1) << std::endl;
-		}*/
 	}
 	
 
