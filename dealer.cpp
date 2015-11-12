@@ -142,10 +142,6 @@ void Dealer::decideHand()
 			}
 			tempPercent = static_cast<double>(newHandWins) / numTestRuns;
 
-			std::cout << "tempPercent:" << tempPercent << std::endl;
-			std::cout << "runs:" << numTestRuns << std::endl;
-			std::cout << "wins:" << newHandWins << std::endl;
-
 			if (tempPercent > info.winningPercentage)
 			{
 				info.index.clear();
@@ -156,6 +152,9 @@ void Dealer::decideHand()
 			}
 		}
 	}
+
+	//check for three card replacements
+	
 	
 
 	//after best hand has been decided make changes
