@@ -70,13 +70,18 @@ void Dealer::decideHand()
 
 	//const int NUMBER_OF_TEST_RUNS = 1000;
 	Hand testHand/*(getCards())*/; //testHand for finding best move
+	Hand oldHand;
 	Deck testDeck; /* = deck;*/	   //testDeck for finding best move
 	Deck testDeck2;
+	Deck testDeck3;
 	int  newHandWins = 0;
 	double tempPercent = 0;
 	int numTestRuns = 0;
 	int debugCounter = 0;
 	//check what happens if one card is removed from each possible position
+
+	std::cout << "deck: " << deck.cardsInDeck();
+
 	for (int i = 0; i < 5; i++)
 	{
 		newHandWins = 0;
@@ -89,6 +94,7 @@ void Dealer::decideHand()
 		for (int j = 0; j < temp; j++)
 		{
 			numTestRuns++;
+
 			testHand.replaceCard(i, testDeck.deal());
 			Dealer tempDealer(testHand,testDeck);
 			if (!(this->findWinner(&tempDealer)))
@@ -113,7 +119,6 @@ void Dealer::decideHand()
 	
 	for (int first = 0; first < 4; first++) //for first four cards
 	{
-		std::cout << first << std::endl;
 		for (int second = first + 1; second < 5; second++)
 		{
 			newHandWins = 0;
@@ -124,12 +129,12 @@ void Dealer::decideHand()
 
 			for (int j = 0; j < deck.cardsInDeck(); j++) //for number of cards in deck
 			{
-				
+				testHand = Hand(getCards());
 				testHand.replaceCard(first, testDeck.deal());
+				oldHand = testHand;
 				for (int p = 0; p < deck.cardsInDeck() - 1; p++)
 				{
 					numTestRuns++;
-					testHand = Hand(getCards());
 
 					testHand.replaceCard(second, testDeck2.deal());
 
@@ -137,7 +142,9 @@ void Dealer::decideHand()
 					if (!(this->findWinner(&tempDealer)))
 					{
 						newHandWins++;
+
 					}
+					testHand = oldHand;
 				}
 			}
 			tempPercent = static_cast<double>(newHandWins) / numTestRuns;
@@ -152,9 +159,69 @@ void Dealer::decideHand()
 			}
 		}
 	}
-
+	numTestRuns = 0;
 	//check for three card replacements
-	
+	for (int first = 0; first < 5; first++)
+	{	
+		bool secondPassed = false;
+		for (int second = first + 1; second < 5 && !secondPassed; second++)
+		{
+			if (first == 4)
+			{
+				second = 0;
+				secondPassed = true;
+			}
+			for (int third = second + 1; (third < 5 && second != 4 && !secondPassed) || (secondPassed && third < first); third++)
+			{
+				newHandWins = 0;
+				numTestRuns = 0;
+				testDeck  = deck;
+				testDeck2 = deck;
+				testDeck3 = deck;
+				testDeck2.deal();
+				testDeck3.deal();
+				testDeck3.deal();
+
+				for (int j = 0; j < deck.cardsInDeck(); j++) //for number of cards in deck
+				{
+					testHand = Hand(getCards());
+					testHand.replaceCard(first, testDeck.deal());
+					oldHand = testHand;
+					for (int p = 0; p < deck.cardsInDeck() - 1; p++)
+					{
+						testHand.replaceCard(second, testDeck2.deal());
+						oldHand = testHand;
+						for (int t = 0; t < deck.cardsInDeck() - 2; t++)
+						{
+							numTestRuns++;
+
+							testHand.replaceCard(third, testDeck3.deal());
+
+							Dealer tempDealer(testHand,testDeck);
+							if (!(this->findWinner(&tempDealer)))
+							{
+								newHandWins++;
+							}
+							testHand = oldHand;
+						}
+					}
+				}
+
+				tempPercent = static_cast<double>(newHandWins) / numTestRuns;
+
+
+				if (tempPercent > info.winningPercentage)
+				{
+					info.index.clear();
+					info.numberOfCardsToReplace = 3;
+					info.index.push_back(first);
+					info.index.push_back(second);
+					info.index.push_back(third);
+					info.winningPercentage = tempPercent;
+				}
+			}
+		}
+	}
 	
 
 	//after best hand has been decided make changes
