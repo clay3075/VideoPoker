@@ -18,6 +18,7 @@
 #include "player.hpp"
 #include "pokerplayer.hpp"
 #include "dealer.hpp"
+#include <thread>
 
 
 
@@ -52,6 +53,7 @@ class Game
 		sf::Sprite resumeSprite;
 		sf::Font font;
 		sf::Text text;
+		std::thread decide;
 		void processEvents(); //used to handle all events that occur in the game
 		void update();		  //will update the game based events that occured
 		void render(); 		  //shows changes to game on screen

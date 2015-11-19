@@ -9,6 +9,7 @@
 
 #include "dealer.hpp"
 #include <iostream>
+
 //constructor will initialize all values needed
 Dealer::Dealer()
 {
@@ -229,12 +230,10 @@ void Dealer::decideHand()
 	{
 		for (int j = 0; j < info.numberOfCardsToReplace; j++)
 		{
-			std::cout << "replace" << info.numberOfCardsToReplace << std::endl;
 			for (int i = 0; i < 5; i++)
 			{
 				if (info.index.at(j) != i)
 				{
-					std::cout << i << std::endl;
 					selectCard(i);
 					//selectCard(info.index.at(i));
 				}

@@ -16,6 +16,7 @@
  	using std::string;
 #include <iostream>
 #include <ctime>
+#include <thread>
 
 //used to handle all events that occur in the game
 void Game::processEvents()
@@ -462,7 +463,6 @@ bool Game::savedGameExists()
 void Game::secondDeal()
 {
 	secondDealAllowed = false;
-	dealer->decideHand();
 	for (int i = 0; i < 5; i++)
 	{
 		if (player->cardSelected(i) == false)
@@ -489,8 +489,13 @@ void Game::restartHand()
 	dealer->shuffle();
 	for (int i = 0; i < 5; i++)
 	{
-		player->drawCard(dealer->deal()); //give player 5 new cards
 		dealer->drawCard(dealer->deal()); //give dealer 5 new cards
+	}
+	//dealer->decideHand();
+	decide.join();
+	for (int i = 0; i < 5; i++)
+	{
+		player->drawCard(dealer->deal()); //give player 5 new cards
 	}
 	//if player has enough money for the initial buy in which is 10 here
 	//and if dealer or other player in this case has enough for buy in.
@@ -510,9 +515,11 @@ Game::Game()
 	srand(time(0)); //seed random generator
 	rand();
 
+
 	player = new PokerPlayer;
 	dealer = new Dealer;
 
+	decide = std::thread(&Dealer::decideHand, &dealer);
 	secondDealAllowed = false;
 
 	restartHand();
