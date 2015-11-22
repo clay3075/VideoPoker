@@ -32,11 +32,14 @@ class Game
 		static const int CARD5 = 4;
 		PokerPlayer* player = nullptr;
 		Dealer* 	 dealer = nullptr;
+		bool playerFolded;
+		bool dealerFolded;
 		int  nameCharCount;
 		bool gameMenuNeeded;
 		bool textEntered;
 		bool textBoxNeeded;
 		bool secondDealAllowed;
+		bool betMenuNeeded;
 		sf::RenderWindow* window = nullptr;
 		sf::Event event;
 		bool mousePressed;
@@ -51,6 +54,12 @@ class Game
 		sf::Sprite foldSprite;
 		sf::Sprite newGameSprite;
 		sf::Sprite resumeSprite;
+		sf::Sprite doneBettingSprite;
+		sf::Sprite clearBetSprite;
+		sf::Sprite chip5Sprite;
+		sf::Sprite chip15Sprite;
+		sf::Sprite chip25Sprite;
+		sf::Sprite allInSprite;
 		sf::Font font;
 		sf::Text text;
 		std::thread decide;
@@ -63,14 +72,16 @@ class Game
 		void drawScore();		 //draw players credits
 		void drawCards();
 		void drawHold();   
+		void drawBetMenu();      //draws betting options to the screen
 		void drawNewHandInstructions();
 		void restartHand();
-		void secondDeal();
+		void secondDeal(bool p = true, bool d = true);
 		void drawWinnerAndHandSpecifications();
 		void renderTextBox();    //draw text box to screen and any characters typed in
 		void saveGame();		 //will save game information to a file called "savedinfo.txt"
 		bool savedGameExists();  //will return true if there is a "savedinfo.txt" file false otherwise
 		void adjustScore();
+		void placeBet(int amount);
 	public:	
 		Game(); //default constructor //sets up game graphics
 		void run(); //will be used to play the game

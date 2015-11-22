@@ -50,6 +50,13 @@ void Game::update()
 {
 	if (mousePressed)
 	{
+		//if player runs out of money
+		if (player->getScore() == 0 && mousePressed)
+		{
+			player->setScore(200);
+			restartHand();
+		}
+
 		//if player presses new game button from start menu
 		if (newGameSprite.getGlobalBounds().contains(static_cast<sf::Vector2f>(*mousePos)) && gameMenuNeeded)
 		{
@@ -68,32 +75,79 @@ void Game::update()
 		}
 
 		//if player presses check button 
-		if (checkSprite.getGlobalBounds().contains(static_cast<sf::Vector2f>(*mousePos)))
+		if (checkSprite.getGlobalBounds().contains(static_cast<sf::Vector2f>(*mousePos)) && secondDealAllowed && !betMenuNeeded)
 		{
-			secondDealAllowed = false;
+			secondDeal(false); //only allow dealer to replace cards
 			adjustScore();
 			player->clearBet();
 			dealer->clearBet();
 		}
 
 		//if player presses fold button 
-		if (foldSprite.getGlobalBounds().contains(static_cast<sf::Vector2f>(*mousePos)))
+		if (foldSprite.getGlobalBounds().contains(static_cast<sf::Vector2f>(*mousePos)) && secondDealAllowed && !betMenuNeeded)
 		{
+			playerFolded = true;
 			secondDealAllowed = false; //hand is over so do not allow another deal
+			dealer->calcScore(true);
+			player->calcScore(false);
 		}
 
 		//if player presses call button 
-		if (callSprite.getGlobalBounds().contains(static_cast<sf::Vector2f>(*mousePos)))
+		if (callSprite.getGlobalBounds().contains(static_cast<sf::Vector2f>(*mousePos)) && secondDealAllowed && !betMenuNeeded)
 		{
+			//will match dealers bet if possible
 		}
 
 		//if player presses raise button 
-		if (raiseSprite.getGlobalBounds().contains(static_cast<sf::Vector2f>(*mousePos)))
+		if (raiseSprite.getGlobalBounds().contains(static_cast<sf::Vector2f>(*mousePos)) && secondDealAllowed && !betMenuNeeded)
 		{
+			betMenuNeeded = true;
+		}
+
+		//if player presses done on bet screen
+		if (doneBettingSprite.getGlobalBounds().contains(static_cast<sf::Vector2f>(*mousePos)) && betMenuNeeded)
+		{
+			betMenuNeeded = false;
+		}
+
+		//if player presses clear on bet screen
+		if (clearBetSprite.getGlobalBounds().contains(static_cast<sf::Vector2f>(*mousePos)) && betMenuNeeded)
+		{
+			//clear bet
+			player->clearBet();
+			player->placeBet(10);
+		}
+
+		//if player presses $5 chip on bet screen
+		if (chip5Sprite.getGlobalBounds().contains(static_cast<sf::Vector2f>(*mousePos)) && betMenuNeeded)
+		{
+			//add money to bet
+			placeBet(5);
+		}
+
+		//if player presses $15 chip on bet screen
+		if (chip15Sprite.getGlobalBounds().contains(static_cast<sf::Vector2f>(*mousePos)) && betMenuNeeded)
+		{
+			//add money to bet
+			placeBet(15);
+		}
+
+		//if player presses $25 chip on bet screen
+		if (chip25Sprite.getGlobalBounds().contains(static_cast<sf::Vector2f>(*mousePos)) && betMenuNeeded)
+		{
+			//add money to bet
+			placeBet(25);
+		}
+
+		//if player presses all in button on bet screen
+		if (allInSprite.getGlobalBounds().contains(static_cast<sf::Vector2f>(*mousePos)) && betMenuNeeded)
+		{
+			//add money to bet
+			placeBet(player->getScore() - player->getBet());
 		}
 
 		//if player presses deal button 
-		if (dealSprite.getGlobalBounds().contains(static_cast<sf::Vector2f>(*mousePos)))
+		if (dealSprite.getGlobalBounds().contains(static_cast<sf::Vector2f>(*mousePos)) && !betMenuNeeded)
 		{
 			if (secondDealAllowed) //if its first round allow another round to be dealt
 			{
@@ -105,31 +159,31 @@ void Game::update()
 		}
 
 		//player presses card 1
-		if (cardSprites[CARD1].getGlobalBounds().contains(static_cast<sf::Vector2f>(*mousePos)))
+		if (cardSprites[CARD1].getGlobalBounds().contains(static_cast<sf::Vector2f>(*mousePos)) && !betMenuNeeded)
 		{
 			player->selectCard(CARD1);
 		}
 
 		//player presses card 2
-		if (cardSprites[CARD2].getGlobalBounds().contains(static_cast<sf::Vector2f>(*mousePos)))
+		if (cardSprites[CARD2].getGlobalBounds().contains(static_cast<sf::Vector2f>(*mousePos)) && !betMenuNeeded)
 		{
 			player->selectCard(CARD2);
 		}
 
 		//player presses card 3
-		if (cardSprites[CARD3].getGlobalBounds().contains(static_cast<sf::Vector2f>(*mousePos)))
+		if (cardSprites[CARD3].getGlobalBounds().contains(static_cast<sf::Vector2f>(*mousePos)) && !betMenuNeeded)
 		{
 			player->selectCard(CARD3);
 		}
 
 		//player presses card 4
-		if (cardSprites[CARD4].getGlobalBounds().contains(static_cast<sf::Vector2f>(*mousePos)))
+		if (cardSprites[CARD4].getGlobalBounds().contains(static_cast<sf::Vector2f>(*mousePos)) && !betMenuNeeded)
 		{
 			player->selectCard(CARD4);
 		}
 
 		//player presses card 5
-		if (cardSprites[CARD5].getGlobalBounds().contains(static_cast<sf::Vector2f>(*mousePos)))
+		if (cardSprites[CARD5].getGlobalBounds().contains(static_cast<sf::Vector2f>(*mousePos)) && !betMenuNeeded)
 		{
 			player->selectCard(CARD5);
 		}
@@ -195,6 +249,8 @@ void Game::render()
 		drawHold();
 		drawNewHandInstructions();
 		drawWinnerAndHandSpecifications();
+		if(betMenuNeeded)
+			drawBetMenu();
 	}
 
 	//show window to screen
@@ -245,6 +301,106 @@ void Game::drawMenu()
 	resumeSprite.setScale(sf::Vector2f(1.0f, 1.0f));            //set size
 	resumeSprite.setPosition(sf::Vector2f(750.0f, 300.0f));   //set postion
 	window->draw(resumeSprite);
+	//
+	//
+}
+
+//draws betting options to the screen
+void Game::drawBetMenu()
+{
+	//draw border of option menu
+	sf::RectangleShape border(sf::Vector2f(1100.0f, 600.0f));
+	border.setFillColor(sf::Color::Black);
+	border.setPosition(sf::Vector2f(250.0f, 200.0f));
+	window->draw(border);
+	//
+
+	//draw box for amount bet
+	sf::RectangleShape amountBetBox(sf::Vector2f(550.0f, 75.0f));
+	amountBetBox.setFillColor(sf::Color::White);
+	amountBetBox.setPosition(sf::Vector2f(520.0f, 220.0f));
+	window->draw(amountBetBox);
+	//
+
+	//draw amount bet inside box
+	text.setColor(sf::Color::Black);
+	text.setCharacterSize(40);
+	text.setString(std::to_string(player->getBet()));
+	//text.setPosition(sf::Vector2f(800 - (sizeof() * 10), 235.0f));
+    text.setPosition(sf::Vector2f(550.0f, 235.0f));
+	window->draw(text);
+	//
+	//
+
+	//draw done button
+	if (!texture.loadFromFile("images/done.png")) //load image
+	{
+		throw "done sprite error."; 
+	}
+	doneBettingSprite.setTexture(texture); //create button sprite
+	doneBettingSprite.setScale(sf::Vector2f(1.0f, 1.0f));            //set size
+	doneBettingSprite.setPosition(sf::Vector2f(1030.0f, 700.0f));   //set postion
+	window->draw(doneBettingSprite);
+	//
+	//
+
+	//draw clear button
+	if (!texture.loadFromFile("images/clear.png")) //load image
+	{
+		throw "clear sprite error."; 
+	}
+	clearBetSprite.setTexture(texture); //create button sprite
+	clearBetSprite.setScale(sf::Vector2f(1.0f, 1.0f));            //set size
+	clearBetSprite.setPosition(sf::Vector2f(270.0f, 700.0f));   //set postion
+	window->draw(clearBetSprite);
+	//
+	//
+
+	//draw $5 chip button
+	if (!texture.loadFromFile("images/PokerChip5.png")) //load image
+	{
+		throw "PokerChip5 sprite error."; 
+	}
+	chip5Sprite.setTexture(texture); //create button sprite
+	chip5Sprite.setScale(sf::Vector2f(.3f, .3f));            //set size
+	chip5Sprite.setPosition(sf::Vector2f(480.0f, 400.0f));   //set postion
+	window->draw(chip5Sprite);
+	//
+	//
+
+	//draw $15 chip button
+	if (!texture.loadFromFile("images/PokerChip15.png")) //load image
+	{
+		throw "PokerChip15 sprite error."; 
+	}
+	chip15Sprite.setTexture(texture); //create button sprite
+	chip15Sprite.setScale(sf::Vector2f(.3f, .3f));            //set size
+	chip15Sprite.setPosition(sf::Vector2f(740.0f, 400.0f));   //set postion
+	window->draw(chip15Sprite);
+	//
+	//
+
+	//draw $25 chip button
+	if (!texture.loadFromFile("images/PokerChip25.png")) //load image
+	{
+		throw "PokerChip25 sprite error."; 
+	}
+	chip25Sprite.setTexture(texture); //create button sprite
+	chip25Sprite.setScale(sf::Vector2f(.3f, .3f));            //set size
+	chip25Sprite.setPosition(sf::Vector2f(985.0f, 400.0f));   //set postion
+	window->draw(chip25Sprite);
+	//
+	//
+
+	//draw all in button
+	if (!texture.loadFromFile("images/silverAllInButton.png")) //load image
+	{
+		throw "All in button sprite error."; 
+	}
+	allInSprite.setTexture(texture); //create button sprite
+	allInSprite.setScale(sf::Vector2f(.7f, .7f));            //set size
+	allInSprite.setPosition(sf::Vector2f(670.0f, 530.0f));   //set postion
+	window->draw(allInSprite);
 	//
 	//
 }
@@ -368,6 +524,20 @@ void Game::drawNewHandInstructions()
 		text.setPosition(sf::Vector2f(450.0f,450.0f));
 		window->draw(text);
 	}
+	//tell player if they are out of money
+	if (player->getScore() == 0)
+	{
+		//draw border of option menu
+		sf::RectangleShape border(sf::Vector2f(850.0f, 400.0f));
+		border.setFillColor(sf::Color::Black);
+		border.setPosition(sf::Vector2f(350.0f, 200.0f));
+		window->draw(border);
+		//
+
+		text.setString("            Game Over!\nClick anywhere to play again."); 
+		text.setPosition(sf::Vector2f(385.0f, 315.0f)); //i think is good 
+		window->draw(text);
+	}
 }
 
 void Game::drawWinnerAndHandSpecifications()
@@ -388,19 +558,32 @@ void Game::drawWinnerAndHandSpecifications()
 
 		//************************* Now determine winner **************************
 		//player is winner
-		if (player->findWinner(dealer))
+		if (!playerFolded && !dealerFolded)
 		{
-			text.setString(player->getName() + " Won");
+			if (player->findWinner(dealer))
+			{
+				text.setString(player->getName() + " Won");
+			}
+			else /*if (dealer->findWinner(player)) //if other player won*/
+			{
+				text.setString(dealer->getName() + " Won");
+				//std::cout << "Dealer\n";
+			}
 		}
-		else if (dealer->findWinner(player)) //if other player won
+		else if (playerFolded)
 		{
-			text.setString(dealer->getName() + " Won");
-			//std::cout << "Dealer\n";
+			text.setString(player->getName() + " Folded");
 		}
-		else
+		else /*if (dealerFolded)*/
 		{
-			text.setString("Tie");
+			text.setString(dealer->getName() + " Folded");
 		}
+		/*else
+		{
+			dealerFolded = false;
+			playerFolded = false;
+		}*/
+		
 		text.setColor(sf::Color::Red);
 		text.setCharacterSize(60);
 		text.setPosition(sf::Vector2f(650.0f,20.0f));
@@ -441,8 +624,8 @@ void Game::adjustScore()
 	//determine winner and adjust score
 	if (player->getScore() >= 10 && dealer->getScore() >= 10)
 	{
-	player->calcScore(player->findWinner(dealer)); //adjust for player
-	dealer->calcScore(dealer->findWinner(player)); //adjust for dealer
+		player->calcScore(player->findWinner(dealer)); //adjust for player
+		dealer->calcScore(dealer->findWinner(player)); //adjust for dealer
 	}
 }
 
@@ -460,22 +643,27 @@ bool Game::savedGameExists()
 }
 
 //deal new cards for cards that are held
-void Game::secondDeal()
+void Game::secondDeal(bool p, bool d)
 {
 	secondDealAllowed = false;
-	for (int i = 0; i < 5; i++)
+	if (p)
 	{
-		if (player->cardSelected(i) == false)
+		for (int i = 0; i < 5; i++)
 		{
-			player->replaceCard(i,dealer->deal());
+			if (player->cardSelected(i) == false)
+			{
+				player->replaceCard(i,dealer->deal());
+			}
 		}
 	}
-	
-	for (int i = 0; i < 5; i++)
+	if (d)
 	{
-		if (dealer->cardSelected(i) == false)
+		for (int i = 0; i < 5; i++)
 		{
-			dealer->replaceCard(i,dealer->deal());
+			if (dealer->cardSelected(i) == false)
+			{
+				dealer->replaceCard(i,dealer->deal());
+			}
 		}
 	}
 }
@@ -487,12 +675,13 @@ void Game::restartHand()
 	player->clearBet();
 	dealer->clearBet();
 	dealer->shuffle();
+
 	for (int i = 0; i < 5; i++)
 	{
 		dealer->drawCard(dealer->deal()); //give dealer 5 new cards
 	}
 	//dealer->decideHand();
-	decide.join();
+	//decide.join();
 	for (int i = 0; i < 5; i++)
 	{
 		player->drawCard(dealer->deal()); //give player 5 new cards
@@ -507,6 +696,22 @@ void Game::restartHand()
 	//
 
 	secondDealAllowed = true;
+	playerFolded = false;
+	dealerFolded = false;
+}
+
+void Game::placeBet(int amount)
+{
+	int oldWorth = player->getScore();
+	player->placeBet(amount);
+	if ((oldWorth + amount) != player->getScore())
+	{
+		text.setString("Not enough money.");
+		text.setColor(sf::Color::Yellow);
+		text.setCharacterSize(60);
+		text.setPosition(sf::Vector2f(600.0f, 520.0f));
+		window->draw(text);
+	}
 }
 
 //default constructor //sets up game graphics
@@ -519,7 +724,7 @@ Game::Game()
 	player = new PokerPlayer;
 	dealer = new Dealer;
 
-	decide = std::thread(&Dealer::decideHand, &dealer);
+	//decide = std::thread(&Dealer::decideHand, &dealer);
 	secondDealAllowed = false;
 
 	restartHand();
@@ -550,6 +755,9 @@ Game::Game()
 	//text box not needed yet
 	textBoxNeeded = false;
 	nameCharCount = 0;
+	playerFolded  = false;
+	dealerFolded  = false;
+	betMenuNeeded = false;
 }
 
 //will be used to play the game

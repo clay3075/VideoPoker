@@ -49,7 +49,7 @@ PokerPlayer::PokerPlayer(int score) : Player(), Hand()
 //will be used to place a bet
 void PokerPlayer::placeBet(const int betAmount)
 {
-	if (betAmount > 0 && betAmount <= score)
+	if (betAmount > 0 && (betAmount + moneyBet) <= score)
 	{
 		moneyBet += betAmount;
 		betPlaced = true;

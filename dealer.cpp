@@ -37,24 +37,23 @@ void Dealer::show(sf::Sprite sprite, sf::RenderWindow* window, sf::Texture& text
 	//draw cards to screen
 	for (unsigned int i = 0; i < player->getNumberOfCardsInHand(); i++) //for each card in hand
 	{
-		//for testing purposes need to see cards
-		//
-		//if (showCards)
+		
+		if (showCards)
 		{
 			if (!texture.loadFromFile("images/" + tempCards.at(i).getFace() + tempCards.at(i).getSuit() + ".jpg"))
 			{
 				throw "Sprite Error";
 			}
 		}
-		//else
+		else
 		{
-			//if (!texture.loadFromFile("images/card2.jpg"))
+			if (!texture.loadFromFile("images/card2.jpg"))
 			{
 				//throw "Sprite Error";
 			}
 		}
-		//
-		//
+		
+		
 		sprite.setTexture(texture); //set image to sprite
 		sprite.setScale(sf::Vector2f(3.0f, 3.0f)); //make card bigger //this is scale needed
 		sprite.setPosition(sf::Vector2f(75.0f * (3.5 * i+2), 100.0f)); //this is position needed 
@@ -78,10 +77,7 @@ void Dealer::decideHand()
 	int  newHandWins = 0;
 	double tempPercent = 0;
 	int numTestRuns = 0;
-	int debugCounter = 0;
 	//check what happens if one card is removed from each possible position
-
-	std::cout << "deck: " << deck.cardsInDeck();
 
 	for (int i = 0; i < 5; i++)
 	{
