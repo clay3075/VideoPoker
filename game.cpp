@@ -7,16 +7,31 @@
  *@date   09/10/15
  */
 
+
+
 #include "game.hpp"
 #include "SFML/graphics.hpp"
 #include <fstream>
+ 	using std::ios;
  	using std::ofstream;
  	using std::ifstream;
+ 	using std::fstream;
 #include <string>
  	using std::string;
 #include <iostream>
 #include <ctime>
 #include <thread>
+#include <cstring>
+
+
+//struct used for writing save game information to a file
+struct SaveGameInfo
+{
+	string name = "";
+	int    playerScore = 0;
+	int    dealerScore = 0;
+};
+
 
 //used to handle all events that occur in the game
 void Game::processEvents()
@@ -258,9 +273,27 @@ void Game::render()
 }
 
 //will read data from "savedinfo.txt" if it exist into player on game
+//if it does not exist defualt data will be used
 void Game::initializePlayer()
 {
+	fstream infoStream("savedinfo.txt", ios::in | ios::binary);
+	SaveGameInfo info;
+	if (infoStream.is_open())
+	{
+		infoStream.seekg(0, ios::beg);
+		infoStream.read(reinterpret_cast<char*>(&info), sizeof(info));
+		infoStream.close();
+	}
+	else
+	{
+		info.name = "Player1";
+		info.playerScore = 200;
+		info.dealerScore = 200;
+	}
 
+	player->setName(info.name);
+	player->setScore(info.playerScore);
+	dealer->setScore(info.dealerScore);
 }
 
 //draw game menu when it is opened
@@ -616,7 +649,18 @@ void Game::drawHold()
 //will save game information to a file called "savedinfo.txt"
 void Game::saveGame()
 {
-
+	fstream saveStream("savedinfo.txt", ios::out | ios::binary);
+	if (saveStream.is_open())
+	{
+		SaveGameInfo info;
+		std::memset(reinterpret_cast<char*>(&info), 0, sizeof(info));
+		info.name = player->getName();
+		info.playerScore = player->getScore();
+		info.dealerScore = dealer->getScore();
+		saveStream.seekp(0,ios::beg);
+		saveStream.write(reinterpret_cast<char*>(&info), sizeof(info));
+		saveStream.close();
+	}
 }
 
 void Game::adjustScore()
