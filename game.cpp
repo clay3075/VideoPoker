@@ -318,7 +318,7 @@ void Game::drawBetMenu()
 	//draw box for amount bet
 	sf::RectangleShape amountBetBox(sf::Vector2f(550.0f, 75.0f));
 	amountBetBox.setFillColor(sf::Color::White);
-	amountBetBox.setPosition(sf::Vector2f(520.0f, 220.0f));
+	amountBetBox.setPosition(sf::Vector2f(530.0f, 220.0f));
 	window->draw(amountBetBox);
 	//
 
@@ -327,7 +327,7 @@ void Game::drawBetMenu()
 	text.setCharacterSize(40);
 	text.setString(std::to_string(player->getBet()));
 	//text.setPosition(sf::Vector2f(800 - (sizeof() * 10), 235.0f));
-    text.setPosition(sf::Vector2f(550.0f, 235.0f));
+    text.setPosition(sf::Vector2f(780.0f, 235.0f));
 	window->draw(text);
 	//
 	//
@@ -398,8 +398,8 @@ void Game::drawBetMenu()
 		throw "All in button sprite error."; 
 	}
 	allInSprite.setTexture(texture); //create button sprite
-	allInSprite.setScale(sf::Vector2f(.7f, .7f));            //set size
-	allInSprite.setPosition(sf::Vector2f(670.0f, 530.0f));   //set postion
+	allInSprite.setScale(sf::Vector2f(.8f, .8f));            //set size
+	allInSprite.setPosition(sf::Vector2f(640.0f, 530.0f));   //set postion
 	window->draw(allInSprite);
 	//
 	//
@@ -670,17 +670,43 @@ void Game::secondDeal(bool p, bool d)
 
 void Game::restartHand()
 {
+	static bool first = true;
+
 	player->clear();
 	dealer->clear();
 	player->clearBet();
 	dealer->clearBet();
 	dealer->shuffle();
 
+	//draw border of option menu
+	sf::RectangleShape border(sf::Vector2f(400.0f, 150.0f));
+	border.setFillColor(sf::Color::Black);
+	border.setPosition(sf::Vector2f(580.0f, 400.0f));
+	window->draw(border);
+	if (first)
+	{
+		window->clear(sf::Color::Black);
+		text.setPosition(sf::Vector2f(580.0f, 410.0f));
+		text.setString("Preparing game...");
+		first = false;
+	}
+	else
+	{
+		text.setString("Shuffling...");
+		text.setPosition(sf::Vector2f(635.0f, 430.0f));
+	}
+	text.setColor(sf::Color::Yellow);
+	text.setCharacterSize(60);
+	
+	window->draw(text);
+	//
+	window->display();
+
 	for (int i = 0; i < 5; i++)
 	{
 		dealer->drawCard(dealer->deal()); //give dealer 5 new cards
 	}
-	//dealer->decideHand();
+	dealer->decideHand();
 	//decide.join();
 	for (int i = 0; i < 5; i++)
 	{
@@ -698,6 +724,7 @@ void Game::restartHand()
 	secondDealAllowed = true;
 	playerFolded = false;
 	dealerFolded = false;
+	window->clear();
 }
 
 void Game::placeBet(int amount)
@@ -727,11 +754,9 @@ Game::Game()
 	//decide = std::thread(&Dealer::decideHand, &dealer);
 	secondDealAllowed = false;
 
-	restartHand();
-
 
 	//create window for game to played in
-	window = new sf::RenderWindow(sf::VideoMode(1600, 1000), "Jacks or Better");
+	window = new sf::RenderWindow(sf::VideoMode(1600, 1000), "5 Card Poker");
 
 	//set moused pressed to false
 	mousePressed = false;
@@ -763,10 +788,16 @@ Game::Game()
 //will be used to play the game
 void Game::run()
 {
+	bool first = true;
 	while (window->isOpen())
 	{
 		processEvents();
 		update();
+		if (first)
+		{
+			restartHand();
+			first = false;
+		}
 		render();
 	}
 }
