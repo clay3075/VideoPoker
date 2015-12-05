@@ -240,3 +240,57 @@ void Dealer::decideHand()
 
 }
 
+//returns true if bet was made
+bool Dealer::makeBet()
+{
+	betPlaced  = true;
+	//int  multiplier = 0;
+
+	//if dealer has a pair of jacks always bet
+	if (getWorth() == 0)
+	{
+		//do nothing
+		betPlaced = false;
+	}
+	else if (getWorth() == 1 /*&& getPairValue() == 11*/)
+	{
+		if (getScore() + 5 >= 5)
+			moneyBet += 5;
+	}
+	else if (getWorth() > 1 && getWorth() < 4)
+	{
+		if (getScore() + 5 >= 10)
+			moneyBet += 10;
+	}
+	else if (getWorth() > 3 && getWorth() < 7)
+	{
+		if (getScore() + 5>= 15)
+			moneyBet += 15;
+	}
+	else if (getWorth() > 6 && getWorth() < 9)
+	{
+		if (getScore() + 5 >= 25)
+			moneyBet +=25;
+	}
+	else
+	{
+		moneyBet = getScore();
+	}
+
+
+	return betPlaced;
+}
+
+
+//if false dealer folded
+bool Dealer::callBet(int betToCall)
+{
+	bool call = false;
+	if (getScore() >= betToCall)
+	{
+		moneyBet = betToCall;
+		call     = true;
+	}
+	return call;
+}
+

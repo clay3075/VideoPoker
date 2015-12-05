@@ -23,6 +23,10 @@
  	{
  		std::cout << exception << std::endl;
  	}
+ 	catch (string ex)
+ 	{
+ 		std::cout << ex << std::endl;
+ 	}
 
  	return 0;
  }

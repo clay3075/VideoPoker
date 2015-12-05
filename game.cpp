@@ -66,9 +66,10 @@ void Game::update()
 	if (mousePressed)
 	{
 		//if player runs out of money
-		if (player->getScore() == 0 && mousePressed)
+		if ((player->getScore() == 0 || dealer->getScore() == 0 ) && mousePressed)
 		{
 			player->setScore(200);
+			dealer->setScore(200);
 			restartHand();
 		}
 
@@ -80,7 +81,7 @@ void Game::update()
 		}
 
 		//if player presses resume button from start menu
-		if (resumeSprite.getGlobalBounds().contains(static_cast<sf::Vector2f>(*mousePos)))
+		if (resumeSprite.getGlobalBounds().contains(static_cast<sf::Vector2f>(*mousePos)) && gameMenuNeeded)
 		{
 			gameMenuNeeded = false; //close menu option
 			if (savedGameExists())
@@ -90,7 +91,7 @@ void Game::update()
 		}
 
 		//if player presses check button 
-		if (checkSprite.getGlobalBounds().contains(static_cast<sf::Vector2f>(*mousePos)) && secondDealAllowed && !betMenuNeeded)
+		if (checkSprite.getGlobalBounds().contains(static_cast<sf::Vector2f>(*mousePos)) && secondDealAllowed && !betMenuNeeded && !dealer->isBetPlaced())
 		{
 			secondDeal(false); //only allow dealer to replace cards
 			adjustScore();
@@ -108,13 +109,26 @@ void Game::update()
 		}
 
 		//if player presses call button 
-		if (callSprite.getGlobalBounds().contains(static_cast<sf::Vector2f>(*mousePos)) && secondDealAllowed && !betMenuNeeded)
+		if (callSprite.getGlobalBounds().contains(static_cast<sf::Vector2f>(*mousePos)) /*&& secondDealAllowed*/ && !betMenuNeeded && !betCalled)
 		{
+			betCalled = true;
 			//will match dealers bet if possible
+			if (dealer->getBet() <= player->getScore())
+			{
+				player->clearBet();
+				player->placeBet(dealer->getBet());
+				//dealer->toggleBetPlaced();
+			}
+			else
+			{
+				player->clearBet();
+				player->placeBet(player->getScore());
+				//dealer->toggleBetPlaced();
+			}
 		}
 
 		//if player presses raise button 
-		if (raiseSprite.getGlobalBounds().contains(static_cast<sf::Vector2f>(*mousePos)) && secondDealAllowed && !betMenuNeeded)
+		if (raiseSprite.getGlobalBounds().contains(static_cast<sf::Vector2f>(*mousePos)) && secondDealAllowed && !betMenuNeeded && betCalled)
 		{
 			betMenuNeeded = true;
 		}
@@ -162,7 +176,7 @@ void Game::update()
 		}
 
 		//if player presses deal button 
-		if (dealSprite.getGlobalBounds().contains(static_cast<sf::Vector2f>(*mousePos)) && !betMenuNeeded)
+		if (dealSprite.getGlobalBounds().contains(static_cast<sf::Vector2f>(*mousePos)) && !betMenuNeeded && (betCalled || dealer->isBetPlaced() == false))
 		{
 			if (secondDealAllowed) //if its first round allow another round to be dealt
 			{
@@ -256,6 +270,8 @@ void Game::render()
 	}
 	else
 	{
+		//drawDealersMove();
+		drawDealersMove();
 		text.setCharacterSize(40);
 		text.setColor(sf::Color::Black);
 		drawButtons();
@@ -272,6 +288,40 @@ void Game::render()
 	window->display();
 }
 
+void Game::drawDealersMove()
+{
+	if (playersTurnToBet)
+	{
+		text.setPosition(sf::Vector2f(635.0f, 420.0f));
+		if (dealer->isBetPlaced())
+			text.setString("Dealer bet $" + std::to_string((dealer->getBet() - 5)) + ".\nMake your move.");
+		else
+			text.setString("Dealer checked.\nIt's your turn.");
+
+		/*//draw border of information menu
+		text.setCharacterSize(40);
+		text.setColor(sf::Color::Yellow);
+		text.setPosition(sf::Vector2f(590.0f, 410.0f));
+		sf::RectangleShape infoBorder(sf::Vector2f(400.0f, 150.0f));
+		infoBorder.setFillColor(sf::Color::Black);
+		infoBorder.setPosition(sf::Vector2f(580.0f, 400.0f));
+		window->draw(infoBorder);
+		window->draw(text);*/
+	}
+	else
+	{
+		text.setPosition(sf::Vector2f(690.0f, 435.0f));
+		text.setString("Your turn.");
+	}
+	//draw border of information menu
+	text.setCharacterSize(40);
+	text.setColor(sf::Color::Yellow);
+	sf::RectangleShape infoBorder(sf::Vector2f(400.0f, 150.0f));
+	infoBorder.setFillColor(sf::Color::Black);
+	infoBorder.setPosition(sf::Vector2f(580.0f, 400.0f));
+	window->draw(infoBorder);
+	window->draw(text);
+}
 //will read data from "savedinfo.txt" if it exist into player on game
 //if it does not exist defualt data will be used
 void Game::initializePlayer()
@@ -470,6 +520,9 @@ void Game::renderTextBox()
 
 void Game::drawButtons()
 {
+	if (!secondDealAllowed)
+		window->clear(sf::Color::Blue);
+
 	//draw call button
 	if (!texture.loadFromFile("images/call2.png")) //load image
 	{
@@ -535,7 +588,15 @@ void Game::drawButtons()
 void Game::drawScore()
 {
 	//draw text to screen
-	text.setString("Score: " + std::to_string(player->getScore()));
+	text.setString("-" + std::to_string(player->getBet()));
+	text.setPosition(sf::Vector2f(10.0f, 860.0f));
+	text.setCharacterSize(45);
+	text.setColor(sf::Color::Red);
+	window->draw(text);
+	text.setString("-" + std::to_string(dealer->getBet()));
+	text.setPosition(sf::Vector2f(1450.0f, 100.0f));
+	window->draw(text);
+	text.setString(/*"Score: " + */std::to_string(player->getScore()) + " :Score ");
 	text.setPosition(sf::Vector2f(10.0f, 900.0f));
 	text.setCharacterSize(70);
 	text.setColor(sf::Color::Yellow);
@@ -558,7 +619,7 @@ void Game::drawNewHandInstructions()
 		window->draw(text);
 	}
 	//tell player if they are out of money
-	if (player->getScore() == 0)
+	if (player->getScore() == 0 || dealer->getScore() == 0)
 	{
 		//draw border of option menu
 		sf::RectangleShape border(sf::Vector2f(850.0f, 400.0f));
@@ -666,8 +727,18 @@ void Game::saveGame()
 void Game::adjustScore()
 {
 	//determine winner and adjust score
-	if (player->getScore() >= 10 && dealer->getScore() >= 10)
+	if (player->getScore() >= 5 && dealer->getScore() >= 5)
 	{
+		if (playerFolded)
+		{
+			dealer->clearBet();
+			dealer->placeBet(player->getBet());
+		}
+		if (dealerFolded)
+		{
+			player->clearBet();
+			player->placeBet(dealer->getBet());
+		}
 		player->calcScore(player->findWinner(dealer)); //adjust for player
 		dealer->calcScore(dealer->findWinner(player)); //adjust for dealer
 	}
@@ -722,7 +793,7 @@ void Game::restartHand()
 	dealer->clearBet();
 	dealer->shuffle();
 
-	//draw border of option menu
+	//draw border of loading menu
 	sf::RectangleShape border(sf::Vector2f(400.0f, 150.0f));
 	border.setFillColor(sf::Color::Black);
 	border.setPosition(sf::Vector2f(580.0f, 400.0f));
@@ -741,7 +812,6 @@ void Game::restartHand()
 	}
 	text.setColor(sf::Color::Yellow);
 	text.setCharacterSize(60);
-	
 	window->draw(text);
 	//
 	window->display();
@@ -756,18 +826,23 @@ void Game::restartHand()
 	{
 		player->drawCard(dealer->deal()); //give player 5 new cards
 	}
-	//if player has enough money for the initial buy in which is 10 here
+	//if player has enough money for the initial buy in which is 5 here
 	//and if dealer or other player in this case has enough for buy in.
-	player->placeBet(10);
-	dealer->placeBet(10);
+	player->placeBet(5);
+	player->setBetFlag(false);
+	dealer->placeBet(5);
+	dealer->setBetFlag(false);
 
-	//
-	//need to handle if player does not have enough money
-	//
+	if (playersTurnToBet == false)
+	{
+		dealer->makeBet();
+	}
 
 	secondDealAllowed = true;
 	playerFolded = false;
 	dealerFolded = false;
+	betCalled    = false;
+	playersTurnToBet = !playersTurnToBet;
 	window->clear();
 }
 
@@ -820,13 +895,17 @@ Game::Game()
 	//set game menu to needed
 	gameMenuNeeded = true;
 	//set text entered to false
-	textEntered = false;
+	textEntered   = false;
 	//text box not needed yet
 	textBoxNeeded = false;
 	nameCharCount = 0;
 	playerFolded  = false;
 	dealerFolded  = false;
 	betMenuNeeded = false;
+	playersTurnToBet = false;
+	betCalled     = true;
+	dealer->setBetFlag(false);
+	player->setBetFlag(false);
 }
 
 //will be used to play the game

@@ -41,6 +41,8 @@ class Dealer: public PokerPlayer
 		void show(sf::Sprite sprite, sf::RenderWindow* window, sf::Texture& texture, Dealer* player, bool showCards);
 		void decideHand(); //will calculate chances of winning and adjust strategy of hand based on it
 		int  cardsInDeck(){return deck.cardsInDeck();}
+		bool makeBet(); //returns true if bet was made
+		bool callBet(int betToCall = 0); //if false dealer folded
 };
 
  #endif

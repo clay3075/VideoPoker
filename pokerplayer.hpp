@@ -28,6 +28,8 @@ class PokerPlayer : public Player, public Hand
 		int  getBet() //returns the current total the bet is at
 			{return moneyBet;}
 		void clearBet(); //will null the moneyBet variable and change betPlaced to false
+		void toggleBetPlaced(){betPlaced = !betPlaced;}
+		void setBetFlag(bool val){betPlaced = val;}
 		bool isBetPlaced(); //will return true if player has put in a bet false otherwise
 		bool findWinner(PokerPlayer* otherPlayer); //returns true if this player had winning hand
 		void show(sf::Sprite* sprite, sf::RenderWindow* window, sf::Texture& texture, PokerPlayer* player); //shows hand to screen

@@ -35,11 +35,13 @@ class Game
 		bool playerFolded;
 		bool dealerFolded;
 		int  nameCharCount;
+		bool playersTurnToBet;
 		bool gameMenuNeeded;
 		bool textEntered;
 		bool textBoxNeeded;
 		bool secondDealAllowed;
 		bool betMenuNeeded;
+		bool betCalled;
 		sf::RenderWindow* window = nullptr;
 		sf::Event event;
 		bool mousePressed;
@@ -74,6 +76,7 @@ class Game
 		void drawHold();   
 		void drawBetMenu();      //draws betting options to the screen
 		void drawNewHandInstructions();
+		void drawDealersMove();
 		void restartHand();
 		void secondDeal(bool p = true, bool d = true);
 		void drawWinnerAndHandSpecifications();
