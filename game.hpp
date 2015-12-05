@@ -42,6 +42,7 @@ class Game
 		bool secondDealAllowed;
 		bool betMenuNeeded;
 		bool betCalled;
+		bool checked;
 		sf::RenderWindow* window = nullptr;
 		sf::Event event;
 		bool mousePressed;

@@ -104,8 +104,8 @@ void Game::update()
 		{
 			playerFolded = true;
 			secondDealAllowed = false; //hand is over so do not allow another deal
-			dealer->calcScore(true);
-			player->calcScore(false);
+			adjustScore();
+			betCalled = true;
 		}
 
 		//if player presses call button 
@@ -117,18 +117,16 @@ void Game::update()
 			{
 				player->clearBet();
 				player->placeBet(dealer->getBet());
-				//dealer->toggleBetPlaced();
 			}
 			else
 			{
 				player->clearBet();
 				player->placeBet(player->getScore());
-				//dealer->toggleBetPlaced();
 			}
 		}
 
 		//if player presses raise button 
-		if (raiseSprite.getGlobalBounds().contains(static_cast<sf::Vector2f>(*mousePos)) && secondDealAllowed && !betMenuNeeded && betCalled)
+		if (raiseSprite.getGlobalBounds().contains(static_cast<sf::Vector2f>(*mousePos)) && secondDealAllowed && !betMenuNeeded && (betCalled || !playersTurnToBet || checked))
 		{
 			betMenuNeeded = true;
 		}
@@ -137,6 +135,12 @@ void Game::update()
 		if (doneBettingSprite.getGlobalBounds().contains(static_cast<sf::Vector2f>(*mousePos)) && betMenuNeeded)
 		{
 			betMenuNeeded = false;
+			if (!dealer->callBet(player->getBet() - dealer->getBet()))
+			{
+				secondDealAllowed = false;
+				dealerFolded      = true;
+				adjustScore();
+			}
 		}
 
 		//if player presses clear on bet screen
@@ -144,7 +148,7 @@ void Game::update()
 		{
 			//clear bet
 			player->clearBet();
-			player->placeBet(10);
+			player->placeBet(dealer->getBet());
 		}
 
 		//if player presses $5 chip on bet screen
@@ -176,7 +180,7 @@ void Game::update()
 		}
 
 		//if player presses deal button 
-		if (dealSprite.getGlobalBounds().contains(static_cast<sf::Vector2f>(*mousePos)) && !betMenuNeeded && (betCalled || dealer->isBetPlaced() == false))
+		if (dealSprite.getGlobalBounds().contains(static_cast<sf::Vector2f>(*mousePos)) && !betMenuNeeded && (betCalled || !playersTurnToBet || checked))
 		{
 			if (secondDealAllowed) //if its first round allow another round to be dealt
 			{
@@ -786,6 +790,7 @@ void Game::secondDeal(bool p, bool d)
 void Game::restartHand()
 {
 	static bool first = true;
+	checked = false;
 
 	player->clear();
 	dealer->clear();
@@ -835,7 +840,8 @@ void Game::restartHand()
 
 	if (playersTurnToBet == false)
 	{
-		dealer->makeBet();
+		if (!dealer->makeBet())
+			checked = true;
 	}
 
 	secondDealAllowed = true;

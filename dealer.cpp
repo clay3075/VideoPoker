@@ -9,6 +9,7 @@
 
 #include "dealer.hpp"
 #include <iostream>
+#include <random>
 
 //constructor will initialize all values needed
 Dealer::Dealer()
@@ -243,6 +244,9 @@ void Dealer::decideHand()
 //returns true if bet was made
 bool Dealer::makeBet()
 {
+	std::random_device rd;
+    std::mt19937 mt(rd());
+    std::uniform_int_distribution<double> dist(1, 14);
 	betPlaced  = true;
 	//int  multiplier = 0;
 
@@ -252,25 +256,30 @@ bool Dealer::makeBet()
 		//do nothing
 		betPlaced = false;
 	}
-	else if (getWorth() == 1 /*&& getPairValue() == 11*/)
+	else if ((getWorth() == 1) || 11 == dist(mt))
 	{
 		if (getScore() + 5 >= 5)
 			moneyBet += 5;
 	}
-	else if (getWorth() > 1 && getWorth() < 4)
+	else if ((getWorth() > 1 && getWorth() < 4) || 13 == dist(mt))
 	{
 		if (getScore() + 5 >= 10)
 			moneyBet += 10;
 	}
-	else if (getWorth() > 3 && getWorth() < 7)
+	else if ((getWorth() > 3 && getWorth() < 7) || 2 == dist(mt))
 	{
 		if (getScore() + 5>= 15)
 			moneyBet += 15;
 	}
-	else if (getWorth() > 6 && getWorth() < 9)
+	else if ((getWorth() > 6 && getWorth() < 9) || 10 == dist(mt))
 	{
 		if (getScore() + 5 >= 25)
 			moneyBet +=25;
+	}
+	else if (7 == dist(mt))
+	{
+		if (getScore() + 5 >= 25)
+			moneyBet +=50;
 	}
 	else
 	{
@@ -285,11 +294,52 @@ bool Dealer::makeBet()
 //if false dealer folded
 bool Dealer::callBet(int betToCall)
 {
+	std::random_device rd;
+    std::mt19937 mt(rd());
+    std::uniform_int_distribution<double> dist(1, 20);
+	betPlaced  = true;
+
 	bool call = false;
-	if (getScore() >= betToCall)
+	if (betToCall == 0 || (getWorth() == 0 && (betToCall + getBet()) < 15) || dist(mt) == 10)
 	{
-		moneyBet = betToCall;
-		call     = true;
+		//do nothing
+		call = true;
+	}
+	else if ((betToCall >= 5 && betToCall <=10 && getWorth() == 1) || dist(mt) == 3)
+	{
+		call = true;
+	}
+	else if ((betToCall >= 15 & betToCall <= 20 && getWorth() >=2 && getWorth() <= 3) || dist(mt) == 12)
+	{
+		call = true;
+	}
+	else if ((betToCall >= 25 & betToCall <= 35 && getWorth() >=4 && getWorth() <= 5) || dist(mt) == 20)
+	{
+		call = true;
+	}
+	else if ((betToCall >= 40 & betToCall <= 55 && getWorth() >=6 && getWorth() <=7) || dist(mt) == 17)
+	{
+		call = true;
+	}
+	else if ((betToCall >= 60 & betToCall <= 100 && getWorth() == 8) || dist(mt) == 9)
+	{
+		call = true;
+	}
+	else if ((betToCall >= 100 && getWorth() > 8) || dist(mt) == 1)
+	{
+		call = true;
+	}
+
+	if (call)
+	{
+		if (getScore() >= betToCall + getBet())
+		{
+			moneyBet += betToCall;
+		}
+		else
+		{
+			moneyBet = getScore();
+		}
 	}
 	return call;
 }
