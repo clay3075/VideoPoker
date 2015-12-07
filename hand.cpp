@@ -11,7 +11,9 @@
 #include <cstdlib>
 //protected
 
-//function to calculate the worth of the cards in hand
+/* Method used to calculate the worth of the cards in the hand.
+ * Will give the hand strength numeric values 0-9.
+ */
 void Hand::calcWorth()
 {
 	if (cards.empty()) //if no cards are in hand
@@ -31,6 +33,9 @@ void Hand::calcWorth()
 
 		//custom implementation for poker
 		string nameOfHand = getNameOfHand();
+
+		//give the hand a numeric value
+		//
 		if(nameOfHand == "Royal Flush")
 		{
 			worth = 9;
@@ -71,21 +76,24 @@ void Hand::calcWorth()
 		{
 			worth = 0;
 		}
+		//
 	}
 	return;
 } 
 
 //public
 
-//default constructor used to initialize hand to blank values 
-//does so by calling clear() function
+/*default constructor used to initialize hand to blank values 
+ *does so by calling clear() function
+ */
 Hand::Hand()
 {
 	clear();
 }
 
-//mirrors the drawing of a card from a deck and adds it to the cards in hand and then calculates the hands worth
-//@param card Is a Card value used to mirror the existence of a card being drawn
+/*mirrors the drawing of a card from a deck and adds it to the cards in hand and then calculates the hands worth
+ *@param card Is a Card value used to mirror the existence of a card being drawn
+ */
 void Hand::drawCard(Card card)
 {
 	cards.push_back(card); //add card to deck
@@ -95,20 +103,23 @@ void Hand::drawCard(Card card)
 	calcWorth();
 	return;
 }
-//returns a vector holding the cards in hand
+
+ /*@returns a vector holding the cards in hand
+  */
 vector<Card>& Hand::getCards() 
 {
 	return cards;
 }
 
-//removes all cards from hand
+/*removes all cards from hand
+ */
 void Hand::clear()
 {
 	cards.clear();
 	calcWorth();
-	for (unsigned int i = 0; i < cards.size(); i++)
+	for (unsigned int i = 0; i < cards.size(); i++) //for each card
 	{
-		if (cards.at(i).isSelected() == true)
+		if (cards.at(i).isSelected() == true) //deselect card
 		{
 			cards.at(i).select();
 		}
@@ -116,22 +127,25 @@ void Hand::clear()
 	return;
 }
 
-//returns the worth of the cards in hand
+/*returns the worth of the cards in hand
+ */
 int Hand::getWorth()
 {
 	return worth;
 }
 
-//if ace is in hand changes ace value
+/*if ace is in hand changes ace value
+ *@param val The value to change the ace to
+ */
 void Hand::changeAceValue(int val)
 {
-	for (unsigned int i = 0; i < cards.size(); i++)
+	for (unsigned int i = 0; i < cards.size(); i++) //for each card
 	{
-		if (cards.at(i).getValue() == 1)
+		if (cards.at(i).getValue() == 1) //if an ace has value 1 change it
 		{
 			cards.at(i).changeValue(val);
 		}
-		else if (cards.at(i).getValue() == val)
+		else if (cards.at(i).getValue() == val) //if it has value trying to be changed change it to one
 		{
 			cards.at(i).changeValue(1);
 		}
@@ -139,18 +153,27 @@ void Hand::changeAceValue(int val)
 	calcWorth();
 }
 
-//select card
+/* Method used to select a card
+ *@param i The index of the card to select
+ */
 void Hand::selectCard(int i)
 {
 	cards.at(i).select();
 }
 
+/* Method used to see if a card is selected
+ *@param i The index of the card you want to check
+ *@param returns true if the card is selected
+ */
 bool Hand::cardSelected(int i)
 {
 	return cards.at(i).isSelected();
 }
 
-//replace chosen cards
+/* Method used to replace a card
+ *@param i The location of the card to replace
+ *@param card The card to replace it with.
+ */
 void Hand::replaceCard(int i, Card card)
 {
 	cards.at(i) = card;
@@ -165,7 +188,8 @@ void Hand::replaceCard(int i, Card card)
 	return;
 }*/
 
-//checks for royal flush etc.. returns as a string the result of the hand
+/*checks for royal flush etc.. returns as a string the result of the hand
+ */
 string Hand::getNameOfHand()
 {
 	string result = "Crappy Hand";
@@ -254,8 +278,6 @@ string Hand::getNameOfHand()
 	{
 		result = "Full House.";
 	}
-	//if ((highestCount == 2 && count2 == 1) || (highestCount == 1 && count2 == 2))
-		//result = "Full House";
 
 	//then see if the next 4 cards are one value higher and same suit
 	//check for straight flush and royal flush
@@ -304,23 +326,16 @@ string Hand::getNameOfHand()
 	return result;
 }
 
-//returns -1 if no pairs
+/* Method used to find a pair and return the value
+ *@return returns -1 if no pairs
+ */
 int Hand::getPairValue()
 {
 	int pairValue = -1;
-	/*for (int i = 0; i < static_cast<int>(cards.size()) - 1; i++)
-	{
-		for (int j = 0; j < static_cast<int>(cards.size()) - 1; j++)
-		{
-			if ((i != j) && cards.at(i).getValue() == cards.at(j).getValue())
-			{
-				pairValue = cards.at(i).getValue();
-			}
-		}
-	}*/
 
-	for (int i = 0; i < static_cast<int>(cards.size()) - 1; i++)
+	for (int i = 0; i < static_cast<int>(cards.size()) - 1; i++) //for each card
 	{
+		//check for pairs
 		if (cards.at(i).getValue() == cards.at(i+1).getValue())
 		{
 			pairValue = cards.at(i).getValue();
@@ -331,39 +346,28 @@ int Hand::getPairValue()
 	return pairValue;
 }
 
+/* Method used to find 2 pair values and return the second value
+ *@return returns -1 if no second pair is found
+ */
 int Hand::checkForSecondPairandValue()
 {
 	int pairValue = -1;
 	int otherPairValue = getPairValue();
-	/*for (int i = 0; i < static_cast<int>(cards.size()) - 1; i++)
-	{
-		std::cout << "First Value: " << otherPairValue << std::endl;
-		for (int j = 0; j < static_cast<int>(cards.size()) - 1; j++)
-		{
-			std::cout << otherPairValue << " != " << cards.at(i).getValue() << std::endl;
-			if ((i != j) && (otherPairValue != cards.at(j).getValue()) && (getPairValue() != cards.at(j).getValue()) && (cards.at(i).getValue() == cards.at(j).getValue()))
-			{
-				pairValue = cards.at(i).getValue();
-			}
-		}
-	}
-	std::cout << "Second Value: " << pairValue << std::endl;*/
 
-	for (int i = 0; i < static_cast<int>(cards.size()) - 1; i++)
+	for (int i = 0; i < static_cast<int>(cards.size()) - 1; i++) //for each card
 	{
-		//std::cout << "getPairValue(): " << getPairValue() << std::endl;
-		//std::cout << cards.at(i).getValue() <<" != "<<otherPairValue << std::endl;
-		if ((cards.at(i).getValue() != otherPairValue) && (cards.at(i).getValue() == cards.at(i+1).getValue()))
+		//see if there is a pair to it other than the first pair
+		if ((cards.at(i).getValue() != otherPairValue) && (cards.at(i).getValue() == cards.at(i+1).getValue())) 
 		{
 			pairValue = cards.at(i).getValue();
 			i++;
 		}
 	}
-	//std::cout << "secondPairValue: " << pairValue << std::endl;
 	return pairValue;
 }
 
-//bubble sort cards in hand
+/*bubble sort cards in hand 
+ */
 void Hand::sort()
 {
 	Card temp;

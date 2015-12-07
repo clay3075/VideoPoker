@@ -17,13 +17,15 @@ const string FACES[DECKSIZE]{"Ace","Two","Three","Four","Five","Six","Seven","Ei
 const int    VALUES[DECKSIZE]{ 1  ,  2 ,    3  ,  4   ,  5   , 6   ,  7    ,  8    , 9    , 10  , 11   , 12    , 13   }; //changed actual value of last 3 to distinguish for hands
 const string SUIT[SUITSIZE]{"Heart","Diamond","Spade","Club"};
 
-//a private function used to clear used cards so that they can be used in the game again
+/*a private function used to clear used cards so that they can be used in the game again
+ */
 void Deck::clear()
 {
 	usedCards.clear();
 }
 
-//will initialize the Decks vector of cards to those of a regular deck of cards
+/*will initialize the Decks vector of cards to those of a regular deck of cards
+ */
 Deck::Deck()
 {
 	Card *temp = nullptr; 
@@ -40,8 +42,9 @@ Deck::Deck()
 	temp = nullptr;
 }	
 
-//requires main function to seed srand
-//will randomize the order of the cards in the vector cards to mirror the shuffling of a deck of cards 
+/*requires main function to seed srand
+ *will randomize the order of the cards in the vector cards to mirror the shuffling of a deck of cards 
+ */
 void Deck::shuffle()
 {	
 	Card temp;
@@ -60,7 +63,8 @@ void Deck::shuffle()
 	}
 }
 
-//will return a card from the top of the deck (return Card from cards vector)
+/*will return a card from the top of the deck (return Card from cards vector)
+ */
 Card Deck::deal()
 {
 	//static unsigned int timesdealt = 0; 

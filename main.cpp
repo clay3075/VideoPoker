@@ -14,10 +14,10 @@
 
  int main()
  {
- 	try
+ 	try //play game unless exception occurs
  	{
  		Game game;
- 		game.run();
+ 		game.run(); //play game
  	}
  	catch (char* exception)
  	{

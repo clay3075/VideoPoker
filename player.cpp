@@ -5,16 +5,18 @@
 #include <string>
 	using std::string;
 
-//constructor will initialize name and set score to 0
+/*constructor will initialize name and set score to 0
+ */
 Player::Player(string nme)
 {
 	name = nme;
 	score = 0;
 }
 
-//accepts a floating point number to set to score value
-//default score is 1500
-//throws a string exception of negative value
+/* Method used to set players score.
+ * if negative value a string exception is thrown
+ *@param scr The new score
+ */
 void Player::setScore(int scr)
 {	
 	if (scr >= 0)					
@@ -28,13 +30,15 @@ void Player::setScore(int scr)
 	}
 }
 
-//returns players current score
+/* Method to return players current score
+ */
 int Player::getScore()
 {
 	return score;
 }
 
-//returns players name
+/* Method to return players name
+ */
 string Player::getName()
 {
 	return name;

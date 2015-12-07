@@ -6,33 +6,44 @@
 
 #include "pokerplayer.hpp"
 #include <iostream>
-//will null the moneyBet variable and change betPlaced to false
+
+/* Method used to reset all attributes related to betting.
+ */
 void PokerPlayer::clearBet()
 {
 	moneyBet = 0;
 	betPlaced = false;
 }
 
-//will return true if player has put in a bet false otherwise
+/* Method used to check if player has made a bet.
+ * returns true if player has made bet false otherwise
+ */
 bool PokerPlayer::isBetPlaced()
 {
 	return betPlaced;
 }
-//will be used to keep score in a valid state as influences are made on it
+
+/* Method used to keep score in a valid state as influences are made on it.
+ *@param wonOrLost If this is true then player will gain the amount of money he has bet
+ *                 if it is false he will lose.
+ */
 void PokerPlayer::calcScore(bool wonOrLost)
 {
 	bool won = true;
-	if (wonOrLost == won)
+	if (wonOrLost == won) //if player won increase score
 	{
 		score += moneyBet;
 	}
-	else
+	else //if player lost decrease score
 	{
 		score -= moneyBet;
 	}
 	return;
 } 
 
+/* Constructor used to initialize player.
+ *@param score The starting score the player will start with (must be positive)
+ */
 PokerPlayer::PokerPlayer(int score) : Player(), Hand()
 {
 	betPlaced = false;
@@ -46,9 +57,12 @@ PokerPlayer::PokerPlayer(int score) : Player(), Hand()
 	}
 }
 
-//will be used to place a bet
+/* Method to allow player to place a bet as long as they have enough money
+ *@param betAmount The amount of money to bet
+ */
 void PokerPlayer::placeBet(const int betAmount)
 {
+	//if player has enough money make bet
 	if (betAmount > 0 && (betAmount + moneyBet) <= score)
 	{
 		moneyBet += betAmount;
@@ -57,6 +71,11 @@ void PokerPlayer::placeBet(const int betAmount)
 	return;
 }
 
+/* Method used to compare two players hands and determine who the 
+ * winner is.
+ *@param otherPlayer The player to be compared to
+ *@return Will return true if this player won or false otherwise
+ */
 bool PokerPlayer::findWinner(PokerPlayer* otherPlayer)
 {
 	bool thisPlayerWon = true;
@@ -70,11 +89,12 @@ bool PokerPlayer::findWinner(PokerPlayer* otherPlayer)
 		{
 			thisPlayerWon = false;
 		}
+		//if both players had two pair
 		else if ((otherPlayer->getPairValue() > this->getPairValue()) && otherPlayer->checkForSecondPairandValue() > this->checkForSecondPairandValue())
 		{
 			thisPlayerWon = false;
 		}
-		else
+		else //if players dont have pairs check for highes card
 		{
 			//check for higher card
 			//if players have same high card check next highest card and so on
@@ -93,8 +113,12 @@ bool PokerPlayer::findWinner(PokerPlayer* otherPlayer)
 	return thisPlayerWon;
 }
 
-
-//shows hand to screen
+/* Method used to render the players cards to the screen.
+ *@param 	  sprite  The sprite that is to be rendered
+ *@param 	  window  The window to render to
+ *@param[out] texture The picture to be shown on the sprite
+ *@param      player  The player whos cards are to be shown
+ */
 void PokerPlayer::show(sf::Sprite* sprite, sf::RenderWindow* window, sf::Texture& texture, PokerPlayer* player)
 {
 	vector<Card> tempCards;

@@ -6,8 +6,9 @@
 	using std::string;
 #include <cstdlib>
 
-//contructor used to initialize values
-//does not check integer value due to fact that some games require cards to be negative points
+/*contructor used to initialize values
+ *does not check integer value due to fact that some games require cards to be negative points
+ */
 Card::Card(string fce, string s, int val)
 {
 	face = fce;
@@ -16,43 +17,52 @@ Card::Card(string fce, string s, int val)
 	selected = false;
 }
 
-//returns the string face value of the card
+/*returns the string face value of the card
+ */
 string Card::getFace()
 {
 	return face;
 }
 
-//returns the suit of the card as a string
+/*returns the suit of the card as a string
+ */
 string Card::getSuit()
 {
 	return suit;
 }
 
-//returns the actual value of the card as an int
+/*returns the actual value of the card as an int
+ */
 int Card::getValue() const
 {
 	return value;
 }
 
-//changes value of card
+/*changes value of card
+ *@param val The value to change the card to
+ */
 void Card::changeValue(int val)
 {
 	value = val;
 }
 
-//will mark this card as selected unless already selected it will then be deselected
+/*will mark this card as selected unless already selected it will then be deselected
+ */
 void   Card::select()
 {
 	selected = !selected; //reverse truth value
 }
 
-//will return whether card is selected or not true for yes false for no
+/*will return whether card is selected or not true for yes false for no
+ */
 bool   Card::isSelected()
 {
 	return selected;
 }
 
-//overloaded less than operator
+/* overloaded less than operator
+ * Compares to cards based on their value
+ */
 bool Card::operator< (const Card& card) const
 {
 	bool flag = false;

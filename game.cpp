@@ -33,7 +33,8 @@ struct SaveGameInfo
 };
 
 
-//used to handle all events that occur in the game
+/* Handles all events that occur in game.
+ */
 void Game::processEvents()
 {
 	mousePressed = false;
@@ -60,7 +61,8 @@ void Game::processEvents()
 	}
 }
 
-//will update the game based events that occured
+/* Method used for updating the games logic based on the events that occured.
+ */
 void Game::update()
 {
 	if (mousePressed)
@@ -258,7 +260,8 @@ void Game::update()
 	}
 }
 
-//shows changes to game on screen
+/* Method used for all rendering needs. Draws game to window
+ */
 void Game::render()
 {
 	//clear screen with color of table background (Blue for now)
@@ -292,6 +295,8 @@ void Game::render()
 	window->display();
 }
 
+/* Will render to the screen what move the dealer made
+ */
 void Game::drawDealersMove()
 {
 	if (playersTurnToBet)
@@ -302,15 +307,6 @@ void Game::drawDealersMove()
 		else
 			text.setString("Dealer checked.\nIt's your turn.");
 
-		/*//draw border of information menu
-		text.setCharacterSize(40);
-		text.setColor(sf::Color::Yellow);
-		text.setPosition(sf::Vector2f(590.0f, 410.0f));
-		sf::RectangleShape infoBorder(sf::Vector2f(400.0f, 150.0f));
-		infoBorder.setFillColor(sf::Color::Black);
-		infoBorder.setPosition(sf::Vector2f(580.0f, 400.0f));
-		window->draw(infoBorder);
-		window->draw(text);*/
 	}
 	else
 	{
@@ -326,11 +322,13 @@ void Game::drawDealersMove()
 	window->draw(infoBorder);
 	window->draw(text);
 }
-//will read data from "savedinfo.txt" if it exist into player on game
-//if it does not exist defualt data will be used
+
+/*will read data from "savedinfo.dat" if it exist into player on game
+ *if it does not exist defualt data will be used
+ */
 void Game::initializePlayer()
 {
-	fstream infoStream("savedinfo.txt", ios::in | ios::binary);
+	fstream infoStream("savedinfo.dat", ios::in | ios::binary);
 	SaveGameInfo info;
 	if (infoStream.is_open())
 	{
@@ -350,7 +348,8 @@ void Game::initializePlayer()
 	dealer->setScore(info.dealerScore);
 }
 
-//draw game menu when it is opened
+/*draw game menu when it is opened
+ */
 void Game::drawMenu()
 {
 	//draw border of option menu
@@ -392,7 +391,8 @@ void Game::drawMenu()
 	//
 }
 
-//draws betting options to the screen
+/*draws betting options to the screen
+ */
 void Game::drawBetMenu()
 {
 	//draw border of option menu
@@ -492,7 +492,9 @@ void Game::drawBetMenu()
 	//
 }
 
-//draw text box to screen and any characters typed in
+/* Will render a text box and any characters typed by the keyboard
+ * Used to recieve users name
+ */
 void Game::renderTextBox()
 {
 	//draw border of option menu
@@ -522,6 +524,8 @@ void Game::renderTextBox()
 	//
 }
 
+/* Will render needed buttons to the screen
+ */
 void Game::drawButtons()
 {
 	if (!secondDealAllowed)
@@ -588,34 +592,41 @@ void Game::drawButtons()
 	//
 }
 
-//draw players credits
+/* Will render both players scores to the screen
+ */
 void Game::drawScore()
 {
 	//draw text to screen
+	//players Bet
 	text.setString("-" + std::to_string(player->getBet()));
 	text.setPosition(sf::Vector2f(10.0f, 860.0f));
 	text.setCharacterSize(45);
 	text.setColor(sf::Color::Red);
 	window->draw(text);
+	//dealers Bet
 	text.setString("-" + std::to_string(dealer->getBet()));
 	text.setPosition(sf::Vector2f(1450.0f, 100.0f));
 	window->draw(text);
-	text.setString(/*"Score: " + */std::to_string(player->getScore()) + " :Score ");
+	//player Score
+	text.setString(std::to_string(player->getScore()) + " :Score ");
 	text.setPosition(sf::Vector2f(10.0f, 900.0f));
 	text.setCharacterSize(70);
 	text.setColor(sf::Color::Yellow);
 	window->draw(text);
+	//dealer Score
 	text.setString("Score: " + std::to_string(dealer->getScore()));
 	text.setPosition(sf::Vector2f(1200.0f,10.0f));
 	window->draw(text);
 }
 
-//if round is over inform user what to do
-//will tell user to press deal for next hand.
+/*if round is over inform user what to do
+ *will tell user to press deal for next hand.
+ */
 void Game::drawNewHandInstructions()
 {
 	if (!secondDealAllowed)
 	{
+		//draw instructions
 		text.setString("Press deal for new hand.");
 		text.setColor(sf::Color::Red);
 		text.setCharacterSize(60);
@@ -638,6 +649,9 @@ void Game::drawNewHandInstructions()
 	}
 }
 
+/* Method used to at the end of the round inform user of the hand they and the dealer
+ * had and whether they won or not.
+ */
 void Game::drawWinnerAndHandSpecifications()
 {
 	if (!secondDealAllowed)
@@ -676,11 +690,6 @@ void Game::drawWinnerAndHandSpecifications()
 		{
 			text.setString(dealer->getName() + " Folded");
 		}
-		/*else
-		{
-			dealerFolded = false;
-			playerFolded = false;
-		}*/
 		
 		text.setColor(sf::Color::Red);
 		text.setCharacterSize(60);
@@ -689,19 +698,21 @@ void Game::drawWinnerAndHandSpecifications()
 	}
 }
 
-//draw cards to screen
+/* Method used to render both players cards to the screen
+ */
 void Game::drawCards()
 {
 	player->show(cardSprites, window, texture, player);
 	dealer->show(dealerCardSprite, window, texture, dealer, !secondDealAllowed);
 }
 
-//if player selects card let them know
+/* If player selects card a "Hold" will appear above the card.
+ */
 void Game::drawHold()
 {
-	for (int i = 0; i < 5; i++)
+	for (int i = 0; i < 5; i++) //for each card
 	{
-		if (player->cardSelected(i))
+		if (player->cardSelected(i)) //if its selected let user know
 		{
 			text.setString("Hold");
 			text.setColor(sf::Color::Yellow);
@@ -711,34 +722,38 @@ void Game::drawHold()
 		}
 	}
 }
-//will save game information to a file called "savedinfo.txt"
+/*will save game information to a file called "savedinfo.dat" in binary
+ */
 void Game::saveGame()
 {
-	fstream saveStream("savedinfo.txt", ios::out | ios::binary);
+	fstream saveStream("savedinfo.dat", ios::out | ios::binary);
 	if (saveStream.is_open())
 	{
 		SaveGameInfo info;
-		std::memset(reinterpret_cast<char*>(&info), 0, sizeof(info));
-		info.name = player->getName();
-		info.playerScore = player->getScore();
-		info.dealerScore = dealer->getScore();
+		std::memset(reinterpret_cast<char*>(&info), 0, sizeof(info)); //clear object of cushion
+		info.name = player->getName();         //
+		info.playerScore = player->getScore(); // fill object full of info needed
+		info.dealerScore = dealer->getScore(); //
 		saveStream.seekp(0,ios::beg);
-		saveStream.write(reinterpret_cast<char*>(&info), sizeof(info));
+		saveStream.write(reinterpret_cast<char*>(&info), sizeof(info)); //write to file
 		saveStream.close();
 	}
 }
 
+/* Method used as a wrapper to check neccessary conditions at needed times and
+ * adjust the score accordingly.
+ */
 void Game::adjustScore()
 {
 	//determine winner and adjust score
 	if (player->getScore() >= 5 && dealer->getScore() >= 5)
 	{
-		if (playerFolded)
+		if (playerFolded) //if playerFolded reset dealer bet to equal theirs
 		{
 			dealer->clearBet();
 			dealer->placeBet(player->getBet());
 		}
-		if (dealerFolded)
+		if (dealerFolded) //opposite as above
 		{
 			player->clearBet();
 			player->placeBet(dealer->getBet());
@@ -748,11 +763,12 @@ void Game::adjustScore()
 	}
 }
 
-//will return true if there is a "savedinfo.txt" file false otherwise
+/*will return true if there is a "savedinfo.dat" file false otherwise
+ */
 bool Game::savedGameExists()
 {
 	bool exists = false;
-	ifstream readFile("savedinfo.txt");
+	ifstream readFile("savedinfo.dat");
 	if (readFile.is_open())
 	{
 		exists = true;
@@ -761,7 +777,10 @@ bool Game::savedGameExists()
 	return exists;
 }
 
-//deal new cards for cards that are held
+/* Method used to deal new cards for cards that are held
+ *@param p True if player is to recieve new cards
+ *@param d True if dealer is to recieve new cards
+ */
 void Game::secondDeal(bool p, bool d)
 {
 	secondDealAllowed = false;
@@ -787,6 +806,9 @@ void Game::secondDeal(bool p, bool d)
 	}
 }
 
+/* Method to be used at the end of every round to reset all value needed for the 
+ * next round.
+ */
 void Game::restartHand()
 {
 	static bool first = true;
@@ -852,6 +874,9 @@ void Game::restartHand()
 	window->clear();
 }
 
+/* Method used to allow user to place bet.
+ *@param amount Amount of money to bet
+ */
 void Game::placeBet(int amount)
 {
 	int oldWorth = player->getScore();
@@ -866,7 +891,9 @@ void Game::placeBet(int amount)
 	}
 }
 
-//default constructor //sets up game graphics
+/*default constructor sets up game graphics
+ *and basic needs.
+ */
 Game::Game()
 {
 	srand(time(0)); //seed random generator
@@ -914,7 +941,8 @@ Game::Game()
 	player->setBetFlag(false);
 }
 
-//will be used to play the game
+/* Method used to begin and maintain the game.
+ */
 void Game::run()
 {
 	bool first = true;
@@ -931,7 +959,8 @@ void Game::run()
 	}
 }
 
-//destructor to free allocated memory
+/*destructor to free allocated memory
+ */
 Game::~Game()
 {
 	delete window;
